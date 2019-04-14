@@ -9,6 +9,9 @@ global wordslist,scorelist
 wordslist = []
 scorelist = []
 def ReadMongo():
+    """
+    函数说明：读取mongodb数据 然后进行预处理 使用正则 beautifulsoup等工具 具体思路就是清洗数据 去掉英文 字符 表情 然后根据评论的星数打上标签1 2星标0 4 5星标1 
+    """
     global wordslist,scorelist
     comment_score=[]
     stri=""
@@ -17,12 +20,11 @@ def ReadMongo():
     allcommentwords = []
     connect = MongoClient('localhost',27017)
     db = connect.douban
-    f = open('影评测试.txt','a+')
-    fp = open('影评训练.csv','a+')
+    # f = open('训练集.txt','a+')
+    # fp = open('影评训练.csv','a+')
     r1 = '[a-zA-Z0-9’!"#$%&\'()*+,-./:;<=>?@，。?★、…【】《》？“”‘’！[\\]^_`{|}~]+'
     # print(list(db.movie.find().limit(20)))
     for info in db.movie.find():
-        
         if len(info['comment_info']):
             info['comment_info'] = str(info['comment_info'][0]).strip()
             info['comment_info'] = str(BeautifulSoup(info['comment_info'],"html.parser"))
@@ -69,19 +71,26 @@ def ReadMongo():
             if len(info['comment_info']):
                 pass
                 # stri+=str(comment_score)+" "+ comment_info+"wangye"
-                f.write(str(info['comment_score'])+" "+ info['comment_info']+"\n") 
+                # f.write(str(info['comment_score'])+" "+ info['comment_info']+"\n") 
                 # w = csv.DictWriter(fp,comment.keys())
                 # w.writerow(comment)
             else:
                 pass
         else:
             pass
-    f.close()
+    # f.close()
     print(wordslist)
-    print(scorelist)
+    print(len(scorelist))
     Frequence_process(wordslist,scorelist)
 
 def Frequence_process(wordlist,scorelist):
+    """
+    函数说明：词频处理
+    参数说明：
+        wordlist：所有单词构成的列表
+        scorelist：0,1列表
+    思路：将频占比0.8和词频小于5的词语剔除
+    """
     newwordslist=[]
     newwordslist2=[]
     print("词频处理中。。。。。。。。。。。。。。。。。。。。。。。。")
@@ -93,7 +102,14 @@ def Frequence_process(wordlist,scorelist):
             if word=='$':
                 newwordslist.append(word)
         else:
-            newwordslist.append(word)
+            # 过滤到单个字
+            if len(word) == 1:
+                if word !='$':
+                    print("过滤此单词"+word)
+                else:
+                    newwordslist.append(word)
+            else:
+                newwordslist.append(word)
 
     for word1 in newwordslist:
         if newwordslist.count(word1)<6:
@@ -101,23 +117,37 @@ def Frequence_process(wordlist,scorelist):
                 newwordslist2.append(word1)
         else:
             newwordslist2.append(word1)
-
+    print("未处理前的词语数")
+    print(len(wordlist))
     print("两次降低维度处理")
+    print("处理后的词语数")
+    print(len(newwordslist2))
     print(newwordslist2)
     print("字符串分割成list处理")
     # 对list中的元素 使用空格相连 根据$ 进行分割 逐行写入txt
     wordstr = " ".join(i for i in newwordslist2)    
     sublist = wordstr.split('$')
+    print(sublist)
     sublist.remove(sublist[-1])
  
-    fw = open('影评训练.txt','a+')
+    fw = open('训练集.txt','a+')
+    fp = open('对比训练集.txt','a+')
+    fp.writelines(wordlist)
     for i in range(len(sublist)):
         if len(sublist[i])!=1:
-            fw.write(str(scorelist[i])+" "+str(sublist[i])+"\n")
+            if len(sublist[i])==0:
+                pass
+            else:
+                fw.write(str(scorelist[i])+" "+str(sublist[i])+"\n")
+        
     print("数据预处理完毕")
     fw.close()
 
 def Stopwords_process(str):
+    """
+    函数说明：停用词处理
+    str：传进来的每一句评论数据
+    """
     # print(str)
     global wordslist,scorelist
     n = 0
@@ -132,19 +162,10 @@ def Stopwords_process(str):
     print("停用词处理")
     print(outstr)
     return outstr
-   
     
-               
-    # print(sublist)
-    # # 写文件
-    # print(scorelist)
-    # fw = open('影评训练.txt','a+')
-    
-    # for sentiment in sublist:
-    #     fw.write(sentiment+"\n")
-    #     print(sentiment)
-    #     # print(score)
-    # fw.close()
-    
-
+def More_process():
+    """
+    函数说明：对词频处理后的训练集再进行词频统计 然后按词频高低取前八个
+    未进行
+    """
 ReadMongo()
