@@ -24,7 +24,7 @@ headers = [
 def connect_mongo():
     client = pymongo.MongoClient(host='localhost', port=27017)
     db = client.douban
-    collection = db.movietest
+    collection = db.movie
     return collection
 def short_comment_process(url):
     # 开始爬评价
@@ -77,7 +77,7 @@ def movie_process(url):
 def allmovie_process():
     # for循环构造所有电影的链接
     for i in range(0,15):
-        url = 'https://movie.douban.com/j/search_subjects?type=movie&tag=科幻&sort=recommend&page_limit=20&page_start='+str(i*20)
+        url = 'https://movie.douban.com/j/search_subjects?type=movie&tag=喜剧&sort=recommend&page_limit=20&page_start='+str(i*20)
         movie_process(url)
 
 
