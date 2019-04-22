@@ -18,13 +18,14 @@ def loadFile(filename):
     
     for line in contents:
         content = line.strip('\n').split(' ')
-        print(line)
+        # print(line)
         classVec.append(int(content[0]))
         del(content[0])
         while '' in content:
             content.remove('')
         contentList.append(content)
     file.close()
+    
     # print(contentList)
     # print(classVec)
     print("已经将分词后的影评，转换成了词汇列表和对应的词向量")
@@ -41,6 +42,7 @@ def createVocabList(dataSet):
     for doc in dataSet :
         vocabList = vocabList | set(doc) 
     # 以列表的形式返回 不重复词汇的集合
+    print(len(vocabList))
     return list(vocabList)
 
 
@@ -60,6 +62,7 @@ def Words_to_vec(vocabList,wordSet):
             returnVec[vocabList.index(word)] = 1
         else:
             pass
+    
     return returnVec
 
 def trainNB(trainMat,trainLabel):
@@ -128,22 +131,14 @@ def classifyNB(vec2Classify,p0vec,p1vec,p_positive):
 
 
 def main():
-    trainList,trainLable = loadFile('影评训练.txt')
+    trainList,trainLable = loadFile('训练集.txt')
     # trainList,trainLable = loadFile('训练集.txt')
     # print(trainList)
     vocabList =createVocabList(trainList)
-    print(vocabList)
+    # print(vocabList)
     trainMat = []
     cnt = 0
-    # for i in range(0,len(trainList),1000):
-    #     for num in range(i,i+1000):
-    #         if num >= len(trainList):
-    #             pass
-    #         else:
-    #             trainMat.append(Words_to_vec(vocabList,trainList[num]))
-    #             cnt+=1
-    #             print("正在处理第%s条数据"%cnt)
-
+    
     
     for train in trainList:
         trainMat.append(Words_to_vec(vocabList,train))
@@ -158,7 +153,7 @@ def main():
     print(p_positive)
     # 加载测试集数据进行测试
     # testList ,testLable = loadFile('新测试.txt')
-    testList ,testLable = loadFile('影评测试.txt')
+    testList ,testLable = loadFile('测试集.txt')
     resultMat = []
     nn = 0
     for test in testList:

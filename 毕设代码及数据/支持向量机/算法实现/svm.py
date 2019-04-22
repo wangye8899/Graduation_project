@@ -33,6 +33,8 @@ def createVocabList(dataSet):
     vocabList = set([])
     for doc in dataSet :
         vocabList = vocabList | set(doc)
+    print(vocabList)
+    print(len(vocabList))
     return list(vocabList)
 
 def Words_to_Vec(vocabList,wordSet):
@@ -53,7 +55,7 @@ def Words_to_Vec(vocabList,wordSet):
 
 def Svm_Train(contentlist,classvec,testclassVec,testMat):
     
-    clf = SVC(C=200,kernel='rbf')
+    clf = SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf', max_iter=-1, probability=False, random_state=None, shrinking=True, tol=0.001, verbose=False)
     clf.fit(contentlist,classvec)
     predict_result = clf.predict(testMat)
     print(predict_result)
@@ -81,5 +83,5 @@ if __name__=='__main__':
     for tcon in testconList:
         testMat.append(Words_to_Vec(allvocablist,tcon))
         cn+=1
-    print(testMat)
+    # print(testMat)
     Svm_Train(trainMat,classVec, testclassVec,testMat)

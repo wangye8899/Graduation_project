@@ -24,7 +24,7 @@ def ReadMongo():
     # fp = open('影评训练.csv','a+')
     r1 = '[a-zA-Z0-9’!"#$%&\'()*+,-./:;<=>?@，。?★、…【】《》？“”‘’！[\\]^_`{|}~]+'
     # print(list(db.movie.find().limit(20)))
-    for info in db.movie.find():
+    for info in db.movie.find().limit(1000):
         if len(info['comment_info']):
             info['comment_info'] = str(info['comment_info'][0]).strip()
             info['comment_info'] = str(BeautifulSoup(info['comment_info'],"html.parser"))
