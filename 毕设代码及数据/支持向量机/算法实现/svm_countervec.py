@@ -7,8 +7,9 @@ import pandas as pd
 import gc
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split,GridSearchCV
 from sklearn import svm
 def Comments_proccess(wy):
     scorelist = []
@@ -58,6 +59,7 @@ def SumFeature(wordslist):
     vec = CountVectorizer()
     notStopWords = pd.DataFrame(vec.fit_transform(wordslist).toarray(),columns=vec.get_feature_names())
     print("未经过停用词处理的特征数为%s"%notStopWords.shape[1])
+
 def VecProcess(count_vec,wordslist):
     # 讲所有数据集转化为词向量
     comment_vec = count_vec.fit_transform(wordslist).toarray()
@@ -110,26 +112,56 @@ def Score_process(comment_score):
     return comment_score
 
 def CommonFeature(wordslist):
+    """
+    平凡特征词处理，>0.8即为平凡 ，<5即为特征
+    """
+    print(wordslist)
     with open('../../stopwords/stopwords/哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordsList = stopword.splitlines()
-    vect = CountVectorizer(max_df = 0.8,min_df=60,stop_words=stopwordsList)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=40,stop_words=stopwordsList)
+    # vect = CountVectorizer(max_df=0.5,min_df=5,stop_words=stopwordsList)
     comment_vec = vect.fit_transform(wordslist).toarray()
+    print(comment_vec)
+    print("共有数据%s"%len(comment_vec)+"条")
+    # print(comment_vec)
+    # 使用pandas工具统计特征数
     MaxMin = pd.DataFrame(vect.fit_transform(wordslist).toarray(),columns=vect.get_feature_names())
     print("去除停用词、平凡词和特征词后的特征总数为：%s"%MaxMin.shape[1])
     return comment_vec
     
 if __name__ == "__main__":
 
+    # 从数据库中拿到分词列表，得分列表
     wordslist,scorelist = Comments_proccess(0)
+
+    # print(wordslist)
+    # print(scorelist)
     comment_vec = CommonFeature(wordslist)
-    comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.3,random_state=0)
-    wytrain = svm.SVC(C=100,kernel = 'linear')
+    comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state=0)
+    wytrain = svm.SVC(C=10,kernel = 'linear')
+    
+    # c_range = np.logspace(-5, 15, 11, base=2)
+    # gamma_range = np.logspace(-9, 3, 13, base=2)
+    # # 网格搜索交叉验证的参数范围，cv=3,3折交叉
+    # param_grid = [{'kernel': ['linear'], 'C': c_range, 'gamma': gamma_range}]
+    # grid = GridSearchCV(wytrain, param_grid, cv=3, n_jobs=-1)
+    # clf = grid.fit(comment_train,target_train)
+    # score = grid.score(comment_test,target_test)
+    # print(score)
     wytrain.fit(comment_train,target_train)
-    com_list = list(wytrain.predict(comment_test))
-    num = 0
-    for i in range(len(com_list)):
-        if com_list[i]==target_test[i]:
-            num+=1
-    print(float(num/len(target_test)))
+    acc = wytrain.score(comment_test,target_test)
+    print(acc)
+    # com_list = list(wytrain.predict(comment_test))
+    # num = 0
+    # for i in range(len(com_list)):
+    #     if com_list[i]==target_test[i]:
+    #         num+=1
+    # print(num)
+    # print(len(target_test))
+    # print(float(num/len(target_test)))
+    # print(comment_test)
+    # print(com_list)
+    # print(target_test)
+    # print()
     
