@@ -77,7 +77,7 @@ def movie_process(url):
 def allmovie_process():
     # for循环构造所有电影的链接
     for i in range(0,15):
-        url = 'https://movie.douban.com/j/search_subjects?type=movie&tag=喜剧&sort=recommend&page_limit=20&page_start='+str(i*20)
+        url = 'https://movie.douban.com/j/search_subjects?type=movie&tag=文艺&sort=recommend&page_limit=20&page_start='+str(i*20)
         movie_process(url)
 
 
