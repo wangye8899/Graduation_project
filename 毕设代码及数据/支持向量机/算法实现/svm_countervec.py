@@ -27,7 +27,7 @@ def Comments_proccess(wy):
     else:
         dbdata = db.movie.find().limit(wy)
     for info in dbdata:
-        if len(info['comment_info']):
+        if len(info['comment_info']): 
         #  当评论数据不为空的时候处理
         # 正则。Beautifulsoup处理
             # print("未处理"+str(info['comment_info'][0]))
@@ -115,14 +115,14 @@ def CommonFeature(wordslist):
     """
     平凡特征词处理，>0.8即为平凡 ，<5即为特征
     """
-    print(wordslist)
+    # print(wordslist)
     with open('../../stopwords/stopwords/哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordsList = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=40,stop_words=stopwordsList)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=20,stop_words=stopwordsList)
     # vect = CountVectorizer(max_df=0.5,min_df=5,stop_words=stopwordsList)
     comment_vec = vect.fit_transform(wordslist).toarray()
-    print(comment_vec)
+    # print(comment_vec)
     print("共有数据%s"%len(comment_vec)+"条")
     # print(comment_vec)
     # 使用pandas工具统计特征数
@@ -133,7 +133,7 @@ def CommonFeature(wordslist):
 if __name__ == "__main__":
 
     # 从数据库中拿到分词列表，得分列表
-    wordslist,scorelist = Comments_proccess(0)
+    wordslist,scorelist = Comments_proccess(20000)
 
     # print(wordslist)
     # print(scorelist)
