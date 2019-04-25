@@ -2,6 +2,7 @@ from pymongo import MongoClient
 from bs4 import BeautifulSoup
 import re
 import jieba
+import pkuseg
 import csv 
 import pandas as pd
 import gc
@@ -40,6 +41,8 @@ def Comments_process(wy):
             info['comment_info'] = ReHtml_process(str(info['comment_info'][0]))
             # jieba分词处理
             info['comment_info'] = Jieba_process(str(info['comment_info'])) 
+            # pkuseg分词处理
+            # info['comment_info'] = pkuseg_process(str(info['comment_info']))
             # 处理评论分数
             info['comment_score'] = Score_process(info['comment_score'])
             scorelist.append(info['comment_score'])
@@ -55,7 +58,7 @@ def CommonFeature(wordslist):
     with open('哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordslist = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=2,stop_words=stopwordslist)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=10,stop_words=stopwordslist)
     # vect = CountVectorizer(max_df=0.8,min_df=3,stop_words=stopwordslist)
     comment_vec = vect.fit_transform(wordslist).toarray()
     print("共有评论文本数据%s"%len(comment_vec)+"条")
@@ -93,6 +96,15 @@ def Jieba_process(infostr):
     stopstr = jieba.cut(stopstr,cut_all=False)
     stopstr = ' '.join(stopstr)
     return stopstr
+def pkuseg_process(infostr):
+    # 去除空格，连接成一句话。
+    stopstr = ''.join(infostr.split())
+    seg = pkuseg.pkuseg()
+    text = seg.cut(stopstr)
+    print(text)
+    # stopstr = ' '.join(stopstr)
+    # print(stopstr)
+    return stopstr
 
 def Score_process(comment_score):
 
@@ -110,7 +122,7 @@ def Score_process(comment_score):
 
 
 if __name__ == "__main__":
-    wordslist,scorelist =Comments_process(15000)
+    wordslist,scorelist =Comments_process(10000)
     comment_vec = CommonFeature(wordslist)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state = 0)  
     wyNB = MultinomialNB()
