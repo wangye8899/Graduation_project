@@ -58,16 +58,16 @@ def CommonFeature(wordslist):
     with open('哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordslist = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=10,stop_words=stopwordslist)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=20,stop_words=stopwordslist)
     # vect = CountVectorizer(max_df=0.8,min_df=3,stop_words=stopwordslist)
-    vect_fro = CountVectorizer()
+    # vect_fro = CountVectorizer()
     comment_vec = vect.fit_transform(wordslist).toarray()
     print("共有评论文本数据%s"%len(comment_vec)+"条")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     # 使用pandas工具统计特征数
 
-    front = pd.DataFrame(vect_fro.fit_transform(wordslist).toarray(),columns=vect_fro.get_feature_names())
+    # front = pd.DataFrame(vect_fro.fit_transform(wordslist).toarray(),columns=vect_fro.get_feature_names())
     MaxMin = pd.DataFrame(vect.fit_transform(wordslist).toarray(),columns=vect.get_feature_names())
-    print("未去除停用词之前的特征数为%s"%front.shape[1])
+    # print("未去除停用词之前的特征数为%s"%front.shape[1])
     print("去除停用词、平凡词和特征词后的特征总数为：%s"%MaxMin.shape[1])
     return comment_vec
     
@@ -126,7 +126,7 @@ def Score_process(comment_score):
 
 
 if __name__ == "__main__":
-    wordslist,scorelist =Comments_process(5000)
+    wordslist,scorelist =Comments_process(0)
     comment_vec = CommonFeature(wordslist)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state = 0)  
     wyNB = MultinomialNB()
