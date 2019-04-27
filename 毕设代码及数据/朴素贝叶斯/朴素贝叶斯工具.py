@@ -58,7 +58,7 @@ def CommonFeature(wordslist):
     with open('哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordslist = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=20,stop_words=stopwordslist)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=10,stop_words=stopwordslist)
     # vect = CountVectorizer(max_df=0.8,min_df=3,stop_words=stopwordslist)
     # vect_fro = CountVectorizer()
     comment_vec = vect.fit_transform(wordslist).toarray()
@@ -126,7 +126,8 @@ def Score_process(comment_score):
 
 
 if __name__ == "__main__":
-    wordslist,scorelist =Comments_process(0)
+    wordslist,scorelist =Comments_process(2000)
+    print(wordslist)
     comment_vec = CommonFeature(wordslist)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state = 0)  
     wyNB = MultinomialNB()
