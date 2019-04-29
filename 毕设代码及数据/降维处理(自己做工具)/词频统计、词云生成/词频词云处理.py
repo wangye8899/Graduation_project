@@ -1,3 +1,4 @@
+
 from pymongo import MongoClient
 from bs4 import BeautifulSoup
 import jieba
@@ -7,6 +8,11 @@ import wordcloud
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 
+"""
+1、实现TFIDF、TextRank的特征值计算
+2、并根据特征值生成词云
+3、统计词频
+"""
 
 
 def Mongo_process(wy):
@@ -144,8 +150,8 @@ def Frequence(wordslist):
 
 
 def Draw_wordcloud(dict):
-
-    back_pic = plt.imread('/home/wangye/图片/壁纸/v17-pascal-nosenzo.png') 
+    # 根据TFIDF特征值、TextRank特征值生成的词云
+    back_pic = plt.imread('下载.png') 
     wc = WordCloud(font_path='font.TTF',
                    background_color="white",  # 背景颜色
                    max_words=2000,  # 词云显示的最大词数
