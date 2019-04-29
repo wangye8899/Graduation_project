@@ -119,7 +119,7 @@ def CommonFeature(wordslist):
     with open('../../stopwords/stopwords/哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordsList = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=20,stop_words=stopwordsList)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=2,stop_words=stopwordsList)
     # vect = CountVectorizer(max_df=0.5,min_df=5,stop_words=stopwordsList)
     comment_vec = vect.fit_transform(wordslist).toarray()
     # print(comment_vec)
@@ -130,10 +130,21 @@ def CommonFeature(wordslist):
     print("去除停用词、平凡词和特征词后的特征总数为：%s"%MaxMin.shape[1])
     return comment_vec
     
+def ReadFileTOVec(filename):
+    wordslist = []
+    scorelist = []
+    f = open(filename,"r")
+    content = f.readlines()
+    for con in content:
+        wordslist.append( str(con.split('$')[0]))
+        scorelist.append(str(con.split('$')[1]).replace('\n',''))
+    return wordslist,scorelist
+
 if __name__ == "__main__":
 
     # 从数据库中拿到分词列表，得分列表
-    wordslist,scorelist = Comments_proccess(20000)
+    # wordslist,scorelist = Comments_proccess(20000)
+    wordslist , scorelist = ReadFileTOVec("02评论数据集分词结果.txt")
 
     # print(wordslist)
     # print(scorelist)
@@ -164,4 +175,6 @@ if __name__ == "__main__":
     # print(com_list)
     # print(target_test)
     # print()
+    
+
     
