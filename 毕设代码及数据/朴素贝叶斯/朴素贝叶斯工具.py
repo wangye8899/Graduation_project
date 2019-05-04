@@ -12,6 +12,16 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split,GridSearchCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import BernoulliNB
+import sys 
+sys.path.append('../降维处理(自己做工具)/词性标注')
+import 词性标注 as wordpro
+from sklearn.model_selection import learning_curve
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn import metrics
+
 
 
 
@@ -50,7 +60,6 @@ def Comments_process(wy):
     
     return wordslist,scorelist
 
-
 def CommonFeature(wordslist):
     """
     处理评论文本中过于平凡的词和过于独特的词
@@ -58,8 +67,8 @@ def CommonFeature(wordslist):
     with open('哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordslist = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=10,stop_words=stopwordslist)
-    # vect = CountVectorizer(max_df=0.8,min_df=3,stop_words=stopwordslist)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.95,min_df=3,stop_words=stopwordslist)
+    # vect = CountVectorizer(stop_words=stopwordslist)
     # vect_fro = CountVectorizer()
     comment_vec = vect.fit_transform(wordslist).toarray()
     print("共有评论文本数据%s"%len(comment_vec)+"条")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
@@ -124,14 +133,51 @@ def Score_process(comment_score):
 
     return comment_score
 
+def Overfitting(datasets,labelsets):
+    
+    # 绘制学习曲线、判断拟合情况如何
+    train_sizes,train_score,test_score = learning_curve(MultinomialNB(),datasets,labelsets,train_sizes=[0.1,0.2,0.4,0.6,0.8,1],cv=10,scoring='accuracy')
+    train_error = 1 - np.mean(train_score,axis=1)
+    test_error = 1 - np.mean(test_score,axis=1) 
+    plt.plot(train_sizes,train_error,'o-',color='r',label='training')
+    plt.plot(train_sizes,test_error,'o-',color = 'g',label='testing')   
+    plt.legend(loc='best')
+    plt.xlabel('traing examples')
+    plt.ylabel('error')
+    plt.show()
 
 if __name__ == "__main__":
-    wordslist,scorelist =Comments_process(2000)
-    print(wordslist)
+    wordslist,scorelist =Comments_process(10000)
+    # wordslist ,scorelist = wordpro.Mongo_process(10000)
+    # print(wordslist)
+    # print(scorelist)
     comment_vec = CommonFeature(wordslist)
+    # poly = PolynomialFeatures(2)
+    # comment_vec = poly.fit_transform(comment_vec)
+    # print(comment_vec)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state = 0)  
-    wyNB = MultinomialNB()
+
+    wyNB = MultinomialNB(alpha=1.0)
+    # recall_score()
     # wyNB = BernoulliNB()
     wyNB.fit(comment_train,target_train)
+    pre_list = wyNB.predict(comment_test)
+    recall_score = recall_score(target_test,pre_list)
+    f1_score = f1_score(target_test,pre_list,average="micro")
     acc = wyNB.score(comment_test,target_test)
+    print("召回率为：")
+    print(recall_score)
+    print("F值为：")
+    print(f1_score)
+    print("准确率为：")
     print(acc) 
+    print("绘制Roc曲线：")
+    true_target = np.array(target_test)
+    print(true_target)
+    pre_score = np.array(pre_list)
+    print(pre_score)
+    fpr,tpr,threholds = metrics.roc_curve(true_target,pre_score)
+    plt.plot(fpr,tpr,marker='o')
+    plt.show()
+    # print("下面测试拟合程度")
+    # Overfitting(comment_vec,scorelist)

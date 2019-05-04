@@ -22,7 +22,8 @@ def Mongo_process(wy):
     wy:数据库读取数量
     """
     comments_pro= []
-    comments_list = []     
+    comments_list = []  
+    score_list = []   
     connect = MongoClient('localhost',27017)
     db = connect.douban
 
@@ -34,6 +35,9 @@ def Mongo_process(wy):
     for info in comments:
         # 读取数据库，并做相关处理 正则表达式、jieba分词等
         if(len(info['comment_info'])):
+            # 处理分数
+            info['comment_score'] = Score_process(info['comment_score'])
+            score_list.append(info['comment_score'])
             # 仅处理评论不为空的评论
             # 正则表达式处理把表情、符号、数字、英文全部去除
             info['comment_info'] = ReHtml_process(str(info['comment_info']))
@@ -45,7 +49,7 @@ def Mongo_process(wy):
             comments_list.append(info['comment_info'])
             # TFIDF(info['comment_info'],5,True)
             comments_pro.append(wordsproperty(info['comment_info'])) 
-    return comments_pro
+    return comments_pro,score_list
 def Stopwords_process(infostr):
     """
     去除停用词
@@ -62,7 +66,7 @@ def Stopwords_process(infostr):
 def Jieba_process(infostr):
     # 出去空格，链接成一句话，无论是否通顺
     # 通过加入jieba自定义词库提高分词的准确率
-    jieba.load_userdict("../../jieba词库/jieba自定义词库.txt")
+    jieba.load_userdict("/home/wangye/Graduation_project/毕设代码及数据/jieba词库/jieba自定义词库.txt")
     stopstr = ''.join(infostr.split())
     stopstr = jieba.cut(stopstr,cut_all=False)
     stopstr = ' '.join(stopstr)
@@ -99,6 +103,8 @@ def wordsproperty(comment):
             pass
         # 先不做过滤处理，直接将词性标注写到文件
         else:
+            print(word) 
+            print(flag)
             f.write(str(word)+"  "+str(flag))
             f.write("\n")
     f.write("##################################################")
@@ -111,6 +117,8 @@ def wordsproperty(comment):
     for word1 ,flag1 in words1:
         if word1 == " ":
             pass
+        elif len(word1) ==1:
+            pass
         else:
             # print(flag1)
             # 保留动词（V）、区别词（b）、副词（d）、状态词（z）、状态词（zg）、形容词（a）
@@ -120,8 +128,23 @@ def wordsproperty(comment):
     return comments_all 
 
 
+def Score_process(comment_score):
+
+    comment_score = int(comment_score)/10
+            # 此处直接根据电影评价的评分打标签 因为 3分作为分界点 1 2 均为消极情感 4 5 为积极情感 
+    if comment_score == 1:
+        comment_score= 0
+
+    elif comment_score == 2:
+        comment_score = 0
+    else :
+        comment_score = 1
+
+    return comment_score
+
+
 if __name__ == "__main__":
     final_comments = []
     # 去除不符合要求的词之后的评论
-    final_comments = Mongo_process(1000)
+    final_comments,score_list = Mongo_process(10)
     print(final_comments)
