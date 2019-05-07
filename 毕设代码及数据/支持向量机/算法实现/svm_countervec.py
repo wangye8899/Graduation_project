@@ -11,6 +11,16 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split,GridSearchCV
 from sklearn import svm
+from sklearn.model_selection import learning_curve
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn import metrics
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+
 def Comments_proccess(wy):
     scorelist = []
     wordslist = []
@@ -119,7 +129,7 @@ def CommonFeature(wordslist):
     with open('../../stopwords/stopwords/哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordsList = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=2,stop_words=stopwordsList)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=3,stop_words=stopwordsList)
     # vect = CountVectorizer(max_df=0.5,min_df=5,stop_words=stopwordsList)
     comment_vec = vect.fit_transform(wordslist).toarray()
     # print(comment_vec)
@@ -140,18 +150,30 @@ def ReadFileTOVec(filename):
         scorelist.append(str(con.split('$')[1]).replace('\n',''))
     return wordslist,scorelist
 
+def Overfitting(datasets,labelsets):
+    
+    # 绘制学习曲线、判断拟合情况如何
+    train_sizes,train_score,test_score = learning_curve(SVC(C=10,kernel = 'linear'),datasets,labelsets,train_sizes=[0.1,0.2,0.4,0.6,0.8,1],cv=10,scoring='accuracy')
+    train_error = 1 - np.mean(train_score,axis=1)
+    test_error = 1 - np.mean(test_score,axis=1) 
+    plt.plot(train_sizes,train_error,'o-',color='r',label='training')
+    plt.plot(train_sizes,test_error,'o-',color = 'g',label='testing')   
+    plt.legend(loc='best')
+    plt.xlabel('traing examples')
+    plt.ylabel('error')
+    plt.show()
+
+
 if __name__ == "__main__":
 
     # 从数据库中拿到分词列表，得分列表
-    # wordslist,scorelist = Comments_proccess(20000)
-    wordslist , scorelist = ReadFileTOVec("02评论数据集分词结果.txt")
-
+    wordslist,scorelist = Comments_proccess(5000)
+    # wordslist , scorelist = ReadFileTOVec("02评论数据集分词结果.txt")
     # print(wordslist)
     # print(scorelist)
     comment_vec = CommonFeature(wordslist)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state=0)
     wytrain = svm.SVC(C=10,kernel = 'linear')
-    
     # c_range = np.logspace(-5, 15, 11, base=2)
     # gamma_range = np.logspace(-9, 3, 13, base=2)
     # # 网格搜索交叉验证的参数范围，cv=3,3折交叉
@@ -175,6 +197,17 @@ if __name__ == "__main__":
     # print(com_list)
     # print(target_test)
     # print()
-    
+    pre_list = wytrain.predict(comment_test)
+    recall_score = recall_score(target_test,pre_list)
+    f1_score = f1_score(target_test,pre_list,average="micro")
+    acc = wytrain.score(comment_test,target_test)
+    print("召回率为：")
+    print(recall_score)
+    print("F值为：")
+    print(f1_score)
+    print("准确率为：")
+    print(acc) 
+    print("下面测试拟合程度")
+    Overfitting(comment_vec,scorelist)
 
     

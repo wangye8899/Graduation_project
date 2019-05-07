@@ -21,6 +21,7 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import recall_score
 from sklearn.metrics import f1_score
 from sklearn import metrics
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 
@@ -67,7 +68,7 @@ def CommonFeature(wordslist):
     with open('哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordslist = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.95,min_df=3,stop_words=stopwordslist)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=3,stop_words=stopwordslist)
     # vect = CountVectorizer(stop_words=stopwordslist)
     # vect_fro = CountVectorizer()
     comment_vec = vect.fit_transform(wordslist).toarray()
@@ -109,6 +110,7 @@ def Jieba_process(infostr):
     stopstr = jieba.cut(stopstr,cut_all=False)
     stopstr = ' '.join(stopstr)
     return stopstr
+
 def pkuseg_process(infostr):
     # 去除空格，连接成一句话。
     stopstr = ''.join(infostr.split())
@@ -147,6 +149,10 @@ def Overfitting(datasets,labelsets):
     plt.show()
 
 if __name__ == "__main__":
+
+    # check_test = ['这部电影很垃圾，不值得一看','电影真的没什么意思，建议大家不要去看','电影非常不错，推荐给各位','刘浩然演的非常不错，支持支持']
+    # label_list = [0,0,1,1]
+    new_list = []
     wordslist,scorelist =Comments_process(10000)
     # wordslist ,scorelist = wordpro.Mongo_process(10000)
     # print(wordslist)
@@ -156,11 +162,20 @@ if __name__ == "__main__":
     # comment_vec = poly.fit_transform(comment_vec)
     # print(comment_vec)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state = 0)  
-
+    
+    # 朴素贝叶斯三种模式：高斯、多项式、伯努利
     wyNB = MultinomialNB(alpha=1.0)
+    # wyNB = GaussianNB(alpha=1.0)
     # recall_score()
     # wyNB = BernoulliNB()
+    # 简单测试一下
+    # for com in check_test:
+    #     new_list.append(Jieba_process(str(com)))
+    #     # print(com)
+    # new_list = CommonFeature(new_list) 
+    # test_list = train_test_split(new_list,)
     wyNB.fit(comment_train,target_train)
+    # print(wyNB.predict(new_list))
     pre_list = wyNB.predict(comment_test)
     recall_score = recall_score(target_test,pre_list)
     f1_score = f1_score(target_test,pre_list,average="micro")
@@ -179,5 +194,5 @@ if __name__ == "__main__":
     fpr,tpr,threholds = metrics.roc_curve(true_target,pre_score)
     plt.plot(fpr,tpr,marker='o')
     plt.show()
-    # print("下面测试拟合程度")
-    # Overfitting(comment_vec,scorelist)
+    print("下面测试拟合程度")
+    Overfitting(comment_vec,scorelist)

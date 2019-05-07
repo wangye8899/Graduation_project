@@ -106,18 +106,23 @@ def More_process(wordslist):
         word_collection.append(str(com).split(" "))
     return word_collection 
 
+
 def train_word2Vec(word_collection):
-   
-    
+    # 设置初始时间
+    t1 = time.time()
     # 控制台输出日志
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.WARNING)
     # 生成word2vec模型
     model = word2vec.Word2Vec(word_collection,size=100, window=5, min_count=1, workers=6)
-    print(model)
+    # model.wv.save_word2vec_format(config.vector_word_filename, binary=False)
+    model.wv.save_word2vec_format('词向量模型',binary=False)
+    # 计算训练词向量共计花费时间
+    print('-------------------------------------------')
+    print("Training word2vec model cost %.3f seconds...\n" % (time.time() - t1))
 
 
 if __name__ == "__main__":
-    words,scores = Comments_process(2)
+    words,scores = Comments_process(20)
     wordvec = More_process(words)
     # print(word2vec)
     train_word2Vec(wordvec)

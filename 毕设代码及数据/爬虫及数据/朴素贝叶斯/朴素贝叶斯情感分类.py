@@ -84,7 +84,7 @@ def trainNB(trainMat,trainLabel):
 
     p_positiveNum = np.ones(numWords)
     p_negativeNum = np.ones(numWords)
-
+    # 拉普拉斯平滑处理
     p_positiveDemo = 2.0
     p_negativeDemo = 2.0
 
@@ -158,9 +158,13 @@ def main():
     print(p_positive)
     # 加载测试集数据进行测试
     # testList ,testLable = loadFile('新测试.txt')
+    # 测试例子
     testList ,testLable = loadFile('影评测试.txt')
     resultMat = []
     nn = 0
+    # check_test = ['这部电影很垃圾，不值得一看','电影真的没什么意思，建议大家不要去看','电影非常不错，推荐给各位','刘浩然演的非常不错，支持支持']
+    # label_list = [0,0,1,1]
+
     for test in testList:
         doc = np.array(Words_to_vec(vocabList,test))
 
@@ -173,6 +177,12 @@ def main():
         nn+=1
         # print("正在处理第%s条数据"%nn)
     cc = 0
+    # for check in check_test:
+    #     doc_up = np.array(Words_to_vec(vocabList,check))
+    #     if classifyNB(doc_up,p0vec,p1vec,p_positive):
+    #         print(1)
+    #     else:
+    #         print(0)
     for i  in range(len(testLable)):
         if testLable[i] == resultMat[i]:
             cc+=1

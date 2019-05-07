@@ -24,7 +24,8 @@ headers = [
 def connect_mongo():
     client = pymongo.MongoClient(host='localhost', port=27017)
     db = client.douban
-    collection = db.movie
+    # collection = db.movie
+    collection = db.back_up
     return collection
 def short_comment_process(url):
     # 开始爬评价
