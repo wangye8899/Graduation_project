@@ -12,6 +12,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split,GridSearchCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import BernoulliNB
+from sklearn.naive_bayes import GaussianNB
 import sys 
 sys.path.append('../降维处理(自己做工具)/词性标注')
 import 词性标注 as wordpro
@@ -138,7 +139,10 @@ def Score_process(comment_score):
 def Overfitting(datasets,labelsets):
     
     # 绘制学习曲线、判断拟合情况如何
-    train_sizes,train_score,test_score = learning_curve(MultinomialNB(),datasets,labelsets,train_sizes=[0.1,0.2,0.4,0.6,0.8,1],cv=10,scoring='accuracy')
+    # train_sizes,train_score,test_score = learning_curve(MultinomialNB(),datasets,labelsets,train_sizes=[0.1,0.2,0.4,0.6,0.8,1],cv=10,scoring='accuracy')
+    # train_sizes,train_score,test_score = learning_curve(GaussianNB(),datasets,labelsets,train_sizes=[0.1,0.2,0.4,0.6,0.8,1],cv=10,scoring='accuracy')
+    train_sizes,train_score,test_score = learning_curve(BernoulliNB(),datasets,labelsets,train_sizes=[0.1,0.2,0.4,0.6,0.8,1],cv=10,scoring='accuracy')
+    
     train_error = 1 - np.mean(train_score,axis=1)
     test_error = 1 - np.mean(test_score,axis=1) 
     plt.plot(train_sizes,train_error,'o-',color='r',label='training')
@@ -164,10 +168,10 @@ if __name__ == "__main__":
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state = 0)  
     
     # 朴素贝叶斯三种模式：高斯、多项式、伯努利
-    wyNB = MultinomialNB(alpha=1.0)
-    # wyNB = GaussianNB(alpha=1.0)
+    # wyNB = MultinomialNB(alpha=1.0)
+    # wyNB = GaussianNB()
     # recall_score()
-    # wyNB = BernoulliNB()
+    wyNB = BernoulliNB()
     # 简单测试一下
     # for com in check_test:
     #     new_list.append(Jieba_process(str(com)))
