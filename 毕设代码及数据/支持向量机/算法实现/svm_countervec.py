@@ -173,7 +173,7 @@ if __name__ == "__main__":
     # print(scorelist)
     comment_vec = CommonFeature(wordslist)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state=0)
-    wytrain = svm.SVC(C=10,kernel = 'linear')
+    wytrain = svm.SVC(C=10,kernel = 'sigmoid')
     # c_range = np.logspace(-5, 15, 11, base=2)
     # gamma_range = np.logspace(-9, 3, 13, base=2)
     # # 网格搜索交叉验证的参数范围，cv=3,3折交叉
@@ -207,7 +207,7 @@ if __name__ == "__main__":
     print(f1_score)
     print("准确率为：")
     print(acc) 
-    print("下面测试拟合程度")
-    Overfitting(comment_vec,scorelist)
+    # print("下面测试拟合程度")
+    # Overfitting(comment_vec,scorelist)
 
     
