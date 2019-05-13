@@ -31,6 +31,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 def Comments_process(wy):
     scorelist = []
     wordslist = []
+    fw = open('全部数据.txt','a+')
     """
     函数说明： 读mongo数据库，将评论数据生成list，返回CountVector/TFIDFVector使用
     wy：数据库读取数目，0代表全部读取                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
@@ -39,7 +40,7 @@ def Comments_process(wy):
     connect = MongoClient('localhost',27017)
     db = connect.douban
     r1 = '[a-zA-Z0-9’!"#$%&\'()*+,-./:;<=>?@，。?★、…【】《》？“”‘’！[\\]^_`{|}~]+'
-
+    sence = []
     # 判断数据库读取条数
     if wy ==0:
         dbdata = db.movie.find()
@@ -49,18 +50,55 @@ def Comments_process(wy):
     for info in dbdata:
         # 仅处理评论不为空的情况
         if len(info['comment_info']):
-            # 正则表达式、BeautifulSoup处理
-            info['comment_info'] = ReHtml_process(str(info['comment_info'][0]))
-            # jieba分词处理
-            info['comment_info'] = Jieba_process(str(info['comment_info'])) 
-            # pkuseg分词处理
-            # info['comment_info'] = pkuseg_process(str(info['comment_info']))
-            # 处理评论分数
-            info['comment_score'] = Score_process(info['comment_score'])
-            scorelist.append(info['comment_score'])
-            wordslist.append(info['comment_info'])
+            if count(str(info['comment_info']),sence):                          
+                # 正则表达式、BeautifulSoup处理
+                info['comment_info'] = ReHtml_process(str(info['comment_info'][0]))
+                # 去除停用词
+                info['comment_info'] = Stopwords_process(str(info['comment_info'])) 
+                # pkuseg分词处理
+                # info['comment_info'] = pkuseg_process(str(info['comment_info']))
+                # 处理评论分数
+                info['comment_score'] = Score_process(info['comment_score'])
+                if len(info['comment_score']):
+                    # fw.write(str(info['comment_score'])+"    "+info['comment_info']+"\n")
+                    scorelist.append(info['comment_score'])
+                    wordslist.append(info['comment_info'])
+                else:
+                    pass
+    # fw.close()
+
+    print(len(sence))
+    print(len(wordslist))
     
     return wordslist,scorelist
+
+def Stopwords_process(str):
+    """
+    函数说明：停用词处理
+    str：传进来的每一句评论数据
+    """
+    # print(str)
+    global wordslist,scorelist
+    n = 0
+    print("***********************************************************************************")
+    stopwords = [line.strip() for line in open('哈工大停用词表.txt','r',encoding='utf-8').readlines()]  
+    outstr=""
+    for oneword in str:
+        if oneword not in  stopwords:
+            outstr+=oneword
+            outstr+=""
+            n+=1  
+    print("停用词处理")
+    print(outstr)
+    return outstr
+
+def count(sentence,sence):
+    if sentence not in sence:
+        sence.append(sentence)
+        return 1
+    else:
+        return 0
+    # print(len(sence))
 
 def CommonFeature(wordslist):
     """
@@ -69,13 +107,12 @@ def CommonFeature(wordslist):
     with open('哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
     stopwordslist = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=3,stop_words=stopwordslist)
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=8,stop_words=stopwordslist)
     # vect = CountVectorizer(stop_words=stopwordslist)
     # vect_fro = CountVectorizer()
     comment_vec = vect.fit_transform(wordslist).toarray()
     print("共有评论文本数据%s"%len(comment_vec)+"条")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     # 使用pandas工具统计特征数
-
     # front = pd.DataFrame(vect_fro.fit_transform(wordslist).toarray(),columns=vect_fro.get_feature_names())
     MaxMin = pd.DataFrame(vect.fit_transform(wordslist).toarray(),columns=vect.get_feature_names())
     # print("未去除停用词之前的特征数为%s"%front.shape[1])
@@ -87,8 +124,10 @@ def ReHtml_process(infostr):
     """
     去除字符串中非中文部分
     """
-    newstr = str(infostr.replace("\n",""))
-    newstr = str(BeautifulSoup(infostr.strip(),"html.parser"))
+    # newstr = infostr.strip()
+    newstr = str(infostr.replace("\n"," "))
+    newstr = str(infostr.replace("\r"," "))
+    newstr = str(BeautifulSoup(newstr.strip(),"html.parser"))
     # 定义两个正则匹配
     r1 = '[a-zA-Z0-9’!"#$%&\'()*+,-./:;<=>?@，。?★、…【】《》？“”‘’！[\\]^_`{|}~]+'
     emoji_pattern = re.compile("["
@@ -127,12 +166,15 @@ def Score_process(comment_score):
     comment_score = int(comment_score)/10
             # 此处直接根据电影评价的评分打标签 因为 3分作为分界点 1 2 均为消极情感 4 5 为积极情感 
     if comment_score == 1:
-        comment_score= 0
+        # comment_score= 0
+        comment_score = "消极"
 
     elif comment_score == 2:
-        comment_score = 0
+        # comment_score = 0
+        comment_score = "消极"
     else :
-        comment_score = 1
+        # comment_score = 1
+        comment_score = "积极"
 
     return comment_score
 
@@ -157,21 +199,24 @@ if __name__ == "__main__":
     # check_test = ['这部电影很垃圾，不值得一看','电影真的没什么意思，建议大家不要去看','电影非常不错，推荐给各位','刘浩然演的非常不错，支持支持']
     # label_list = [0,0,1,1]
     new_list = []
-    wordslist,scorelist =Comments_process(10000)
+    wordslist,scorelist =Comments_process(0)
+    
     # wordslist ,scorelist = wordpro.Mongo_process(10000)
     # print(wordslist)
     # print(scorelist)
+
     comment_vec = CommonFeature(wordslist)
+    print(comment_vec)
     # poly = PolynomialFeatures(2)
     # comment_vec = poly.fit_transform(comment_vec)
     # print(comment_vec)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state = 0)  
     
     # 朴素贝叶斯三种模式：高斯、多项式、伯努利
-    # wyNB = MultinomialNB(alpha=1.0)
+    wyNB = MultinomialNB(alpha=100.0)
     # wyNB = GaussianNB()
     # recall_score()
-    wyNB = BernoulliNB()
+    # wyNB = BernoulliNB()
     # 简单测试一下
     # for com in check_test:
     #     new_list.append(Jieba_process(str(com)))
@@ -189,7 +234,7 @@ if __name__ == "__main__":
     print("F值为：")
     print(f1_score)
     print("准确率为：")
-    print(acc) 
+    print(acc)
     print("绘制Roc曲线：")
     true_target = np.array(target_test)
     print(true_target)
@@ -198,5 +243,5 @@ if __name__ == "__main__":
     fpr,tpr,threholds = metrics.roc_curve(true_target,pre_score)
     plt.plot(fpr,tpr,marker='o')
     plt.show()
-    print("下面测试拟合程度")
-    Overfitting(comment_vec,scorelist)
+    # print("下面测试拟合程度")
+    # Overfitting(comment_vec,scorelist)

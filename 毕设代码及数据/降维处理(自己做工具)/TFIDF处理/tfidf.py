@@ -24,6 +24,7 @@ def Comments_proccess(wy,filename):
     # 评论个数
 
     global lines 
+    sence = []
     num = 0
     if wy == 0:
         dbdata = db.movie.find()
@@ -35,27 +36,32 @@ def Comments_proccess(wy,filename):
         #  当评论数据不为空的时候处理
         # 正则。Beautifulsoup处理
             # print("未处理"+str(info['comment_info'][0]))
-            info['comment_info'] = ReHtml_process(str(info["comment_info"][0]))
-            # jieba分词处理
-            info['comment_info'] = Jieba_process(str(info['comment_info']))
-            # 停用词处理
-            info['comment_info'],wordslist = Stopwords_process(str(info['comment_info']),'哈工大停用词表.txt')
-            wordslist = More_process(wordslist)
-            # print("处理完"+info['comment_info'])
-            # 处理分数
-            info['comment_score'] = Score_process(info['comment_score'])
-            scorelist.append(info['comment_score'])
-            if len(wordslist):
-                fw.write(str(info['comment_score'])+"$"+info['comment_info']+"\n")
-                lines+=1
-                # else:
-                #     print("目前不可以操作"+str(num))
-            num+=1
-
-    fw.close()
+            # info['comment_info'] = ReHtml_process(str(info["comment_info"][0]))
+            # # jieba分词处理
+            # info['comment_info'] = Jieba_process(str(info['comment_info']))
+            # # 停用词处理
+            # info['comment_info'],wordslist = Stopwords_process(str(info['comment_info']),'哈工大停用词表.txt')
+            # wordslist = More_process(wordslist)
+            # # print("处理完"+info['comment_info'])
+            # # 处理分数
+            # info['comment_score'] = Score_process(info['comment_score'])
+            # scorelist.append(info['comment_score'])
+            # if len(wordslist):
+            #     fw.write(str(info['comment_score'])+"$"+info['comment_info']+"\n")
+            #     lines+=1
+            #     # else:
+            #     #     print("目前不可以操作"+str(num))
+            # num+=1
+            count(str(info['comment_info']),sence)
+    # fw.close()
 # 通过临时写文件转存数据
 # 调用函数开始求解
-    
+
+def count(sentence,sence):
+    if sentence not in sence:
+        sence.append(sentence)
+    print(len(sence))
+
 
 def StratTFIDF(filename,lenofword,sumofcomment):
     global scorelist
@@ -253,5 +259,6 @@ if __name__ == "__main__":
 
     # filename = '未TFIDF数据集.txt'
     # Comments_proccess(0,filename)
-    filename = '平凡独特训练集.txt'
-    StratTFIDF(filename,3,lines)
+    Comments_proccess(20000,"dsad")
+    # # filename = '平凡独特训练集.txt'
+    # StratTFIDF(filename,3,lines)
