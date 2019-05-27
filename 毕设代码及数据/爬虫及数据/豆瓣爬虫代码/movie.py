@@ -24,17 +24,14 @@ headers = [
 def connect_mongo():
     client = pymongo.MongoClient(host='localhost', port=27017)
     db = client.douban
-    collection = db.movie
-    # collection = db.back_up
+    # 在演示的时候，为了不覆盖原有数据库中的数据，使用back_uo备份数据库存储
+    # collection = db.movie
+    collection = db.back_up
     return collection
 def short_comment_process(url):
     # 开始爬评价
     html = requests.get(url,headers=random.choice(headers))
     tree = etree.HTML(html.content.decode('utf-8'))
-    # span_list = tree.xpath('//span[@class="comment-info"]')
-    # for span in 
-    # comment_score = re.findall(r"\d+\.?\d*",str(comment_score))[0]
-    # movie_detail['comment_score'] = comment_score
     div_list = tree.xpath('//div[@class="comment"]')
     for div in div_list:
         comment_info = div.xpath('./p/span/text()')
@@ -55,15 +52,12 @@ def detail_process(url):
     html = requests.get(url,headers=random.choice(headers))
     tree = etree.HTML(html.content.decode('utf-8'))
     short_comment_url = tree.xpath('//div[@id="comments-section"]/div[1]/h2/span/a/@href')[0]
-    # ['https://movie.douban.com/subject/26752088/comments?status=P'
-    # https://movie.douban.com/subject/26752088/comments?start=0&limit=20&sort=new_score&status=P&percent_type=h
     short_comment_hurl = short_comment_url.split('?')[0]+'?start=0&limit=20&sort=new_score&status=P&percent_type=h'
     short_comment_lurl = short_comment_url.split('?')[0]+'?start=0&limit=20&sort=new_score&status=P&percent_type=l'
     movie_detail['movie_score'] = tree.xpath('//strong[@class="ll rating_num"]/text()')
     short_comment_process(short_comment_hurl)
     short_comment_process(short_comment_lurl)
-    # print(html.content.decode('utf-8'))
-    # print(short_comment_url)
+
 def movie_process(url):
     response = requests.get(url,headers=random.choice(headers))
     response = response.json()

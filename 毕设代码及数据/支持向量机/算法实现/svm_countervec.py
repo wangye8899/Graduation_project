@@ -173,30 +173,11 @@ if __name__ == "__main__":
     # print(scorelist)
     comment_vec = CommonFeature(wordslist)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state=0)
-    wytrain = svm.SVC(C=10,kernel = 'sigmoid')
-    # c_range = np.logspace(-5, 15, 11, base=2)
-    # gamma_range = np.logspace(-9, 3, 13, base=2)
-    # # 网格搜索交叉验证的参数范围，cv=3,3折交叉
-    # param_grid = [{'kernel': ['linear'], 'C': c_range, 'gamma': gamma_range}]
-    # grid = GridSearchCV(wytrain, param_grid, cv=3, n_jobs=-1)
-    # clf = grid.fit(comment_train,target_train)
-    # score = grid.score(comment_test,target_test)
-    # print(score)
+    wytrain = svm.SVC(C=10,kernel = 'linear')
+    
     wytrain.fit(comment_train,target_train)
     acc = wytrain.score(comment_test,target_test)
     print(acc)
-    # com_list = list(wytrain.predict(comment_test))
-    # num = 0
-    # for i in range(len(com_list)):
-    #     if com_list[i]==target_test[i]:
-    #         num+=1
-    # print(num)
-    # print(len(target_test))
-    # print(float(num/len(target_test)))
-    # print(comment_test)
-    # print(com_list)
-    # print(target_test)
-    # print()
     pre_list = wytrain.predict(comment_test)
     recall_score = recall_score(target_test,pre_list)
     f1_score = f1_score(target_test,pre_list,average="micro")

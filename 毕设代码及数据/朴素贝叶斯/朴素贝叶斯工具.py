@@ -26,8 +26,21 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 
-
-
+def read_file(filename):
+    f = open(filename,'r')
+    scorelist = []
+    wordslist = []
+    data = f.readlines()
+    for d in data:
+        com = str(d).strip().split(' ')
+        com = [x for x in com if x!='']
+        if str(com[0]) == "积极":
+            scorelist.append(1)
+        else:
+            scorelist.append(0)
+        wordslist.append(''.join(com[1:]))
+        
+    return wordslist,scorelist
 def Comments_process(wy):
     scorelist = []
     wordslist = []
@@ -53,13 +66,15 @@ def Comments_process(wy):
             if count(str(info['comment_info']),sence):                          
                 # 正则表达式、BeautifulSoup处理
                 info['comment_info'] = ReHtml_process(str(info['comment_info'][0]))
+                info['comment_info'] = Jieba_process(str(info['comment_info']))
                 # 去除停用词
-                info['comment_info'] = Stopwords_process(str(info['comment_info'])) 
+                # info['comment_info'] = Stopwords_process(str(info['comment_info'])) 
                 # pkuseg分词处理
                 # info['comment_info'] = pkuseg_process(str(info['comment_info']))
                 # 处理评论分数
                 info['comment_score'] = Score_process(info['comment_score'])
-                if len(info['comment_score']):
+                # if len(info['comment_score']):
+                if len(info['comment_info']):  
                     # fw.write(str(info['comment_score'])+"    "+info['comment_info']+"\n")
                     scorelist.append(info['comment_score'])
                     wordslist.append(info['comment_info'])
@@ -67,7 +82,7 @@ def Comments_process(wy):
                     pass
     # fw.close()
 
-    print(len(sence))
+    # print(len(sence))
     print(len(wordslist))
     
     return wordslist,scorelist
@@ -104,21 +119,35 @@ def CommonFeature(wordslist):
     """
     处理评论文本中过于平凡的词和过于独特的词
     """          
+    # with open('哈工大停用词表.txt','rb') as fp:
+    #     stopword = fp.read().decode('utf-8')
+    # stopwordslist = stopword.splitlines()
+    # vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=3,stop_words=stopwordslist)
+    # # vect = CountVectorizer(stop_words=stopwordslist)
+    # # vect_fro = CountVectorizer()
+    # comment_vec = vect.fit_transform(wordslist).toarray()
+    # print("共有评论文本数据%s"%len(comment_vec)+"条")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+    # # 使用pandas工具统计特征数
+    # # front = pd.DataFrame(vect_fro.fit_transform(wordslist).toarray(),columns=vect_fro.get_feature_names())
+    # MaxMin = pd.DataFrame(vect.fit_transform(wordslist).toarray(),columns=vect.get_feature_names())
+    # # print("未去除停用词之前的特征数为%s"%front.shape[1])
+    # print("去除停用词、平凡词和特征词后的特征总数为：%s"%MaxMin.shape[1])
+    # return comment_vec
+    
+
     with open('哈工大停用词表.txt','rb') as fp:
         stopword = fp.read().decode('utf-8')
-    stopwordslist = stopword.splitlines()
-    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=8,stop_words=stopwordslist)
-    # vect = CountVectorizer(stop_words=stopwordslist)
-    # vect_fro = CountVectorizer()
+    stopwordsList = stopword.splitlines()
+    vect=TfidfVectorizer(binary=False,decode_error='ignore',max_df=0.8,min_df=3,stop_words=stopwordsList)
+    # vect = CountVectorizer(max_df=0.5,min_df=5,stop_words=stopwordsList)
     comment_vec = vect.fit_transform(wordslist).toarray()
-    print("共有评论文本数据%s"%len(comment_vec)+"条")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+    # print(comment_vec)
+    print("共有数据%s"%len(comment_vec)+"条")
+    # print(comment_vec)
     # 使用pandas工具统计特征数
-    # front = pd.DataFrame(vect_fro.fit_transform(wordslist).toarray(),columns=vect_fro.get_feature_names())
     MaxMin = pd.DataFrame(vect.fit_transform(wordslist).toarray(),columns=vect.get_feature_names())
-    # print("未去除停用词之前的特征数为%s"%front.shape[1])
     print("去除停用词、平凡词和特征词后的特征总数为：%s"%MaxMin.shape[1])
     return comment_vec
-    
 
 def ReHtml_process(infostr):
     """
@@ -167,14 +196,14 @@ def Score_process(comment_score):
             # 此处直接根据电影评价的评分打标签 因为 3分作为分界点 1 2 均为消极情感 4 5 为积极情感 
     if comment_score == 1:
         # comment_score= 0
-        comment_score = "消极"
+        comment_score = 0
 
     elif comment_score == 2:
         # comment_score = 0
-        comment_score = "消极"
+        comment_score = 0
     else :
         # comment_score = 1
-        comment_score = "积极"
+        comment_score = 1
 
     return comment_score
 
@@ -195,36 +224,18 @@ def Overfitting(datasets,labelsets):
     plt.show()
 
 if __name__ == "__main__":
-
-    # check_test = ['这部电影很垃圾，不值得一看','电影真的没什么意思，建议大家不要去看','电影非常不错，推荐给各位','刘浩然演的非常不错，支持支持']
-    # label_list = [0,0,1,1]
-    new_list = []
-    wordslist,scorelist =Comments_process(0)
-    
-    # wordslist ,scorelist = wordpro.Mongo_process(10000)
-    # print(wordslist)
-    # print(scorelist)
-
+    wordslist,scorelist =Comments_process(5000)
+   
     comment_vec = CommonFeature(wordslist)
     print(comment_vec)
-    # poly = PolynomialFeatures(2)
-    # comment_vec = poly.fit_transform(comment_vec)
-    # print(comment_vec)
     comment_train,comment_test,target_train,target_test = train_test_split(comment_vec,scorelist,test_size = 0.25,random_state = 0)  
     
     # 朴素贝叶斯三种模式：高斯、多项式、伯努利
-    wyNB = MultinomialNB(alpha=100.0)
+    wyNB = MultinomialNB()
     # wyNB = GaussianNB()
     # recall_score()
     # wyNB = BernoulliNB()
-    # 简单测试一下
-    # for com in check_test:
-    #     new_list.append(Jieba_process(str(com)))
-    #     # print(com)
-    # new_list = CommonFeature(new_list) 
-    # test_list = train_test_split(new_list,)
     wyNB.fit(comment_train,target_train)
-    # print(wyNB.predict(new_list))
     pre_list = wyNB.predict(comment_test)
     recall_score = recall_score(target_test,pre_list)
     f1_score = f1_score(target_test,pre_list,average="micro")

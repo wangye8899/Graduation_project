@@ -1,0 +1,1224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>PaperFree最权威中文论文抄袭检测系统</title>
+<style type="text/css">
+<!--
+user_icon {
+color: #FFFFFF;
+}
+html
+{
+overflow-x:hidden;
+overflow-y:auto;
+}
+body,td,th {
+font-family: "微软雅黑";
+font-size: 12px;
+}
+h1,h2,h3,h4,h5,h6 {
+font-family: "宋体";
+}
+p{
+margin-bottom:10px;
+}
+demo_padding {
+line-height: 30px;
+}
+.zhengwen {
+padding-right: 15px;
+padding-left: 5px;
+padding-bottom:100px;
+font-size: 13px;
+line-height: 20px;
+color: #666666;
+}
+.zhengwencenter {
+padding-right: 15px;
+padding-left: 0px;
+margin-bottom:10px;
+font-size: 13px;
+line-height: 20px;
+color: #666666;
+text-align:center
+}
+.neikuang {
+background-color: #EBEBEB;
+border: 1px solid #999999;
+padding-right: 10px;
+padding-left: 10px;
+margin-top:10px;
+margin-left:25px;
+width:300px;
+}
+.shubu{
+height: 20px;
+width: 20px;
+margin-left:25px;
+background-color: #FFFFFF;
+border: 1px solid #999999;
+text-align: center;
+vertical-align: middle;
+display: block;
+color: #666666;
+}
+a.red:link {color:#FF0000}
+a.red:visited {color:#FF0000}
+a.red:hover {color:#000000}
+a.red:active {color:#000000}
+
+a.orange:link {color:#FF6600}
+a.orange:visited {color:#FF6600}
+a.orange:hover {color:#000000}
+a.orange:active {color:#000000}
+
+a.dark:link {color:#666666}
+a.dark:visited {color:#666666}
+a.dark:hover {color:#000000}
+a.dark:active {color:#000000}
+
+a.pagelink:hover {color:#000000}
+a.pagelink:active {color:#000000}
+
+.green{color:#008000}
+.gray{color:#666666}
+.red{color:#FF0000}
+.orange{color:#FF6600}
+a{TEXT-DECORATION:none}
+
+-->
+</style>
+</head>
+<body>
+
+<div class="zhengwen">
+
+
+  <br>
+<span style="margin-left:25px"></span> 大连海事大学
+<br>
+  <br>
+<span style="margin-left:25px"></span> 毕 业 论 文
+<br>
+  <br>
+<span style="margin-left:25px"></span> 二○一九年六月
+<br>
+  <br>
+<span style="margin-left:25px"></span> 网络文本数据的爬取与分析
+<br>
+  <br>
+<span style="margin-left:25px"></span> 专业班级： 软件工程2班
+<br>
+  <br>
+<span style="margin-left:25px"></span> 姓    名：    王冶
+<br>
+  <br>
+<span style="margin-left:25px"></span> 指导教师：    李楠
+<br>
+  <br>
+<span style="margin-left:25px"></span> 信息科学技术学院
+<br>
+  <br>
+<span style="margin-left:25px"></span> 摘    要
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文针对互联网中的网络评论数据（以豆瓣影评为例），利用机器学习算法，分析其包含的个人情感，从而实现对于评论文本积极、消极情感的判断，以及灌水评论、垃圾评论的识别和剔除，达到舆情分析的初步效果。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第一，使用python对豆瓣网站的电影评论数据进行爬去，进行初步的数据处理并存入MonGoDB数据库中；第二，
+<br>
+  <br>
+<span style="margin-left:25px"></span> 提取数据库中的影评文本和对应的评论得分，为每一条评论标注标签；第三，使用jieba中文分词工具，对每一条文本数据进行分词处理、并生成TFIDF特征向量矩阵；第四，使用机器学习中的模型（朴素贝叶斯、支持向量机）以及深度学习中的卷积神经网络进行文本的情感分析。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本次实验基于Linux操作系统，以python作为开发语言，使用VsCode编辑器编写程序，借助于Sklearn机器学习工具包，以多种方法对文本的情感进行的训练分析，得到了对应的效果。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 关键词：网络爬虫；文本分类；情感分析；机器学习；深度学习
+<br>
+  <br>
+<span style="margin-left:25px"></span> I
+<br>
+  <br>
+<span style="margin-left:25px"></span> ABSTRACT
+<br>
+  <br>
+<span style="margin-left:25px"></span> Based on the network comment data in the Internet (taking douban film review as an example), this paper USES machine learning algorithm to analyze the personal emotions contained in it, so as to judge the positive and negative emotions of the comment text, as well as to identify and eliminate comments and garbage comments, and achieve the initial effect of public opinion analysis.
+<br>
+  <br>
+<span style="margin-left:25px"></span> First, use python to crawl the movie review data of douban website, conduct preliminary data processing and store it in MonGoDB database. Second,
+<br>
+  <br>
+<span style="margin-left:25px"></span> Extract the movie review text and corresponding comment score in the database, label each comment; Thirdly, using the Chinese word segmentation tool of jieba, word segmentation was performed on each piece of text data and the TFIDF eigenvector matrix was generated; Fourthly, the model in machine learning (naive bayes, support vector machine) and the convolutional neural network in deep learning are used for the emotional analysis of text.
+<br>
+  <br>
+<span style="margin-left:25px"></span> This experiment is based on the Linux operating system. Python is used as the development language, and the VsCode editor is used to write the program. With the help of the Sklearn machine learning kit, the training and analysis of the text's emotion are carried out in various ways, and the ideal effect is obtained.
+<br>
+  <br>
+<span style="margin-left:25px"></span> Keywords:
+<br>
+  <br>
+<span style="margin-left:25px"></span> Web crawlers; Text classification; Emotional analysis; Machine learning; Deep learningIII
+<br>
+  <br>
+<span style="margin-left:25px"></span> 目录
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第1章 绪论	1
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.1 课题研究的背景及意义	1
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.2 文本情感分析的研究现状	1
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.2.1 基于情感词典的文本情感分析方法	1
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.2.2基于机器学习的文本情感分析方法	2
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.2.3基于深度学习的文本情感分析方法	2
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.3 论文组织结构	2
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.4 本章小结	3
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第2章 基础知识及相关技术	3
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.1 python网络爬虫技术	3
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.1.1 豆瓣爬虫逻辑	3
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2 文本预处理技术	5
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2.1去除脏数据	5
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2.2中文分词处理	6
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2.3停用词处理	6
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2.4平凡词、独特词处理	6
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3 机器学习算法、深度学习算法	7
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3.1朴素贝叶斯	7
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3.2 支持向量机（SVM）	8
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3.3 卷积神经网络（CNN）	11
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.4 本章小结	13
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第3章 朴素贝叶斯算法在中文文本情感分析中的应用	13
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.1 贝叶斯定理与朴素贝叶斯	13
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.1.1 贝叶斯公式	13
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.1.2 朴素贝叶斯在文本情感分析中的具体应用	14
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2 朴素贝叶斯中文文本情感分析处理流程	14
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.1 中文文本预处理	14
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.2 停用词处理	14
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.3 中文分词	15
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.4 自定义词典	15
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.5 TF-IDF特征提取	16
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.6 中文词性标注	16
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.7 词频统计	17
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.8 训练数据、验证数据	17
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.3 本章小结	21
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第4章 支持向量机算法在中文文本情感分析中的应用	21
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.1 支持向量机·核函数	22
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.2 不同核函数的SVM文本情感分析对比	23
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.2.1 线性核函数实验效果：	23
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.2.2 多项式核函数实验效果：	24
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.2.3 高斯核函数实验效果：	24
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.3 本章小结	24
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第5章 卷积神经网络算法在中文文本情感分析中的应用	25
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.1 文本预处理	25
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.1.1 基于字粒度的文本预处理	25
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.1.2 基于词粒度的文本预处理	25
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.2 中文文本情感分析时卷积神经网络的结构	26
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.3 卷积神经网络训练、验证、测试结果	28
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.4 本章小结	30
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第6章 致谢	31
+<br>
+  <br>
+<span style="margin-left:25px"></span> 网络文本数据的爬取与分析
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第1章 绪论
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.1 课题研究的背景及意义
+<br>
+  <br>
+<span style="margin-left:25px"></span> 当今社会，在信息化的影响下，每个人都拥有着丰富多彩的网络生活，在享受网络生活的同时，网络也随之带来了许多问题。伴随着大流量app、网站的出现与流行，数以万计的网络数据进入人们视野，而垃圾评论、恶意灌水评论的大量存在混淆了人们的视听，错误引导舆论，甚至严重至歪曲事实真相。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 基于这样的现实背景，分析网络文本评论数据、过滤垃圾评论、以及进行舆情把控便具有重大的意义。本文在这样的现实背景下，利用机器学习算法，对评论文本进行了特征提取和情感分析，从而初步实现对于网络文本数据的正负向情感分析、以及垃圾评论的过滤。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文以提高文本情感分析性能为目标，通过研究机器学习算法（朴素贝叶斯、支持向量机） 、深度学习算法（卷积神经网络）并将其应用到中文文本分类这一问题，将有助于提高基于文本情感分析的网络舆情把控、用户评价等分析。因此，本文基于机器学习、深度学习的文本情感分析具有较高的科学研究意义和应用价值。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.2 文本情感分析的研究现状
+<br>
+  <br>
+<span style="margin-left:25px"></span> 目前，文本情感分析主要有三类分类方法：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 基于情感词典的文本情感分析方法；
+<br>
+  <br>
+<span style="margin-left:25px"></span> 基于机器学习的文本情感分析方法
+<br>
+  <br>
+<span style="margin-left:25px"></span> 那么随着进年来深度学习技术的不断发展和深入研究，深度学习在自然语言处理这一领域也广泛应用开来。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在本节中，将简单介绍基于情感字典、机器学习、深度学习的文本情感分析的相关技术以及发展现状。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.2.1 基于情感词典的文本情感分析方法
+<br>
+  <br>
+<span style="margin-left:25px"></span> 顾名思义，基于词典的文本情感分析方法通常根据人工搭建的情感词典，利用当前句子中存在的情感词、情感短语的情感加强、反转等规则来判断当前句子的情感类型。就研究现状而言，目前已经实现通过基于搜索引擎的方法、以及每个词语和情感词语之间的相关度等方法实现情感分类，并提高分类效果。不过基于情感词典的文本情感分析方法需要投入大量的人力，将非常耗费人力成本。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.2.2基于机器学习的文本情感分析方法
+<br>
+  <br>
+<span style="margin-left:25px"></span> 机器学习算法主要分为两类，一种是有监督的机器学习算法，另一种是无监督的机器学习算法。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 有无监督的区别在于：是否使用人工标注的数据作为数据集进行训练分析，近年来，包括使用朴素贝叶斯、SVM支持向量机、决策树等机器学习算法在文本情感分析问题上面都取得了非常不错的效果，朴素贝叶斯基于贝叶斯公式，将“已知特征求解类别”的问题转化成“已知类别求解特征”和“类别概率”的乘积问题；SVM基本思想是求解能够正确划分训练数据集并且几何间隔最大的分离超平面。本文将使用这两种机器学习算法进行文本情感分析。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.2.3基于深度学习的文本情感分析方法
+<br>
+  <br>
+<span style="margin-left:25px"></span> 基于深度学习的文本情感分析主要使用的方法有：CNN（卷积神经网络）、RNN（循环神经网络）。卷积神经网络通过卷积核的卷积运算，提取重要特征，在经过池化层的进一步处理，最终在全连接层得出正确的分类结果，因此卷积神经网络更适合用于分类的任务。而循环神经网络是具有时间顺序的关系，同时属于前馈神经网络。由于循环神经网络的时间顺序关系，导致其通道之间具有了前后时间上的联系。所以循环神经网络更适合做上下文的语义分析。目前国内外关于文本情感分析的研究还远远没有达到饱和，由于模型的限制，以及中文数据的不确定性，这也导致了关于中文的情感分析还没有达到英文情感分析的高度。本文使用的是基于深度学习中卷积神经网络的情感分析方法，对中文文本进行了具体的分析。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.3 论文组织结构
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文的内容组织结构如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第一章：介绍当前网络生活中的大流量应用所带来的垃圾评论对人们生活的影响，以及对网络数据进行分析的意义。最后介绍网络文本情感分析主要的研究方法和现阶段的研究现状。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第二章：介绍本文所使用的技术、工具以及相关基础知识。包括使用python网络爬虫技术对豆瓣网站进行爬取，同时介绍本文爬虫的具体逻辑；除此之外，还将介绍如何过滤脏数据、冗余数据，以及正则表达式、BeautifulSoup等工具的使用；还将介绍自然语言处理中的文本预处理内容——分词、去除停用词；最后，本章着重介绍所使用的机器学习、深度学习算法即朴素贝叶斯、支持向量机、卷积神经网络。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第三章：详细介绍机器学习算法——朴素贝叶斯，以及它在文本情感分类中的相关处理过程，同时详细介绍在使用朴素贝叶斯算法进行文本的情感分类时，文本预处理的步骤，以及如何使用机器学习工具包sklearn实现朴素贝叶斯算法，并讨论影响文本情感分析的具体因素和遗留的具体问题。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第四章：详细介绍机器学习算法——支持向量机，包括支持向量机的数学公式推导、拉格朗日对偶问题的解决，以及SMO算法的数学原理。除此之外还将介绍如何使用sklearn工具包实现支持向量机并应用到中文文本情感分析中。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第五章：详细介绍卷积神经网络的基本构成，以及如何使用Tensorflow构建自己的卷积神经网络，如何预处理文本来满足神经网络的输入要求，展示使用cnn进行文本的情感分析的具体实验结果。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第六章：主要对比朴素贝叶斯、支持向量机、卷积神经网络的实验效果，以及如何调参优化试验模型，使实验效果达到最优。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 1.4 本章小结
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本章主要介绍了文本情感分析的研究背景、以及应用意义。同时也阐述了实现文本情感分析的三种主流方法的原理以及相应的应用现状，主要包括基于情感词典、基于机器学习、基于深度学习的文本情感分析方法。最后，本章给出了本文的内容组织结构。本文将主要使用基于机器学习、深度学习这两种方法实现网络文本的情感分析，同时还会涉及中文分词，生成词向量、文本预处理等相关内容。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第2章 基础知识及相关技术
+<br>
+  <br>
+<span style="margin-left:25px"></span> 网络文本数据的爬取与数据分析涉及到python网络爬虫、机器学习、深度学习、自然语言处理等相关内容，本文将对网络爬虫技术、自然语言处理中的中文分词，生成词向量、特征提取，机器学习中的朴素贝叶斯、支持向量机和深度学习中的卷积神经网络进行详细介绍。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.1 python网络爬虫技术
+<br>
+  <br>
+<span style="margin-left:25px"></span> 网络爬虫是一个自动提取网页的程序，它为搜索引擎从万维网上下载网页，是搜索引擎的重要组成。Python语言中提供了大量的库，能够帮助我们非常方便的从网络上爬取自几需要的数据。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.1.1 豆瓣爬虫逻辑
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文使用python-requests模块对豆瓣电影网站进行了爬取，共爬到电影评论数据4万条左右，数据内容主要包括电影的文本评论、对应评论的官方打分等相关内容。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文需要情感丰富的文本评论数据作为数据集进行训练分析，而评论文本又不宜过长，故此选择了豆瓣电影的电影短评数据作为本次实验的训练集数据，网站数据如下图所示：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 矩形框内便是需要爬去的电影短评数据，箭头指向的便是这条评论的得分数据，后期根据这个数据对标签进行人工标注。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 具体的爬虫逻辑如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 对于爬虫爬取下来的网络文本数据，要进行了特殊字符以及英文字符的处理，这里可以使用正则表达式、BeautifulSoup等工具，同时还要根据评论的得分情况，对其进行人工标注，1,2标注为0，表示为消极情感。4,5分标注为1，表示为正向情感。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2 文本预处理技术
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2.1去除脏数据
+<br>
+  <br>
+<span style="margin-left:25px"></span> 由于爬虫爬取下来的网络数据包含大量的HTML标签、表情、符号、以及包括很多英文字符，这些字符的存在将大大降低情感分析的精准度以及效率。本文使用Python中自带的Re模块即正则表达式模块对英文字符、表情、符号进行剔除，同时使用BeautifulSoup去除HTML标签。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2.2中文分词处理
+<br>
+  <br>
+<span style="margin-left:25px"></span> 英文较中文来讲，由于空格的存在，天然不需要分词这一处理。而中文则不同。目前中文分词的工具包包括jieba、THULAC以及北大开源工具包pkuseg。目前分词工具实现的原理基本是基于规则、统计、语义、理解这四种方式实现。而本文使用jieba正是基于统计的分词方法，jieba分词工具包共有三种模式：精确模式、全模式、搜索引擎模式。而这三种模式具有不同的特点和优势，精确模式能够将句子精确地切分开，特别适合做文本分析。全模式对于句子词语扫描速度很快，但却无法解决歧义问题。搜索引擎模式，顾名思义更适合用于搜索引擎分词。本文的分词采取的是“精确模式”，这样利于文本的情感分析。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2.3停用词处理
+<br>
+  <br>
+<span style="margin-left:25px"></span> 停用词是一些不会影响当前句子感情的词或字，在做自然语言处理的时候，更多的采取将这些词过滤掉，从而提高后续工作的效率。目前对于停用词的处理，大都是基于停用词表，通过遍历的方式去除停用词。本文选用了哈工大停用词表，对豆瓣影评分词后的数据进行了停用词过滤。本文以5000条影评数据为例，对比了在未去除停用词和去除停用词之后的特征数，如下图所示：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 可以看到再去除停用词后，特征数由26748下降到26517，当数据量达到几十万条乃至几十G的时候，去除停用词便显得尤为重要。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.2.4平凡词、独特词处理
+<br>
+  <br>
+<span style="margin-left:25px"></span> 平凡词指的是在众多文本数据中均出现的词语，例如“电影”，由于出现的频数过高，其所代表的情感意义也就不是很突出，过于平凡。独特词指的是，在众多文本数据中某个词语仅出现很少的次数，也就是仅在少数文本数据中存在，那么它所代表也只是少数的特点，并不具备说服力。为了降低特征矩阵的特征数，进而提高中文情感分析的准确度和效率，本文采用统计词语在文件中出现的次数frequence、词语的文件占比率rate两项数据作为参考指标，设置阈值，将词语的文件占比率rate超过0.8，词语在文件中出现的次数frequence少于10次的词语全部剔除，极大的降低了特征数。如下图所示：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 可见，在设置阈值，剔除平凡词和独特词之后，特征数成功下降到原来的十分之一。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3 机器学习算法、深度学习算法
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3.1朴素贝叶斯
+<br>
+  <br>
+<span style="margin-left:25px"></span> 贝叶斯决策论是概率框架下实施决策的基本方法，对于分类任务来说，当所有相关概率在已知的理想情况下，贝叶斯决策理论将根据这些相关概率和误判损失进行最优分类，从而得出最优的分类类别标记。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 而基于贝叶斯公式，我们知道：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （2.1）
+<br>
+  <br>
+<span style="margin-left:25px"></span> ——类别的先验概率
+<br>
+  <br>
+<span style="margin-left:25px"></span> ——样本A对于类别B的条件概率
+<br>
+  <br>
+<span style="margin-left:25px"></span> ——归一化证据因子
+<br>
+  <br>
+<span style="margin-left:25px"></span> ——后验概率
+<br>
+  <br>
+<span style="margin-left:25px"></span> 这其中，我们把P(B)成为“类别”的先验概率；而p(A|B)是样本A对于类别B的条件概率；P(A)称为用于归一化的证据因子，那么对于给定的样本A，p(A)与类别标记没有任何关系，那么问题：“在已知特征样本A的情况下，求解该样本为B的概率？”就将转换成如何根据训练数据估计先验概率P(B)、条件概率P(A|B)的乘积问题。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 类先验概率P(B)表示的是各类样本占总样本的比例，反映了子样本的数量情况。根据大数定律可知，当训练集的样本数量充足时，各个样本满足独立同分布时，P(B)即可用各类样本出现的频率来表示。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 对类条件概率P(A|B)而言，他涉及的是有关于所有特征样本A的联合概率，那么当各个特征相互独立的时候，类条件概率便可转换为各个子特征属性的条件概率乘积
+<br>
+  <br>
+<span style="margin-left:25px"></span> 那么在贝叶斯分类器的基础上，当我们假设各个特征属性相互独立时，那么每个特征属性都将对分类的结果产生影响，这时我们将贝叶斯分类器称为朴素贝叶斯分类器。“朴素”即代表特征之间独立假设的成立。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 那么由上述条件可知，朴素贝叶斯的数学公式应用到特征分类领域为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （2.2）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 由于各个特征属性之间相互独立，那么条件概率便可以写成各个子特征的条件概率之积，而先验概率仍然保持不变。那么朴素贝叶斯分类器的训练过程便是，基于训练集来估计类别的先验概率P(B)，并且估计每一个特征属性的条件概率。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 朴素贝叶斯分类器共有三种模型，分别是多项式模型、伯努利模型、高斯模型。三个模型各有特点，也又所区别。其中多项式模型的特征为单词、特征值为该类单词出现的词频占百分比，并且在多项式朴素贝叶斯分类器中，特征向量多为离散型向量，应用于文本分类；伯努利模型以文本为特征，特征值为布尔型数据，标为0或者；高斯模型中，特征向量是连续性变量，并且假定所有特征的取值是符合高斯分布的。高斯模型适用于连续性变量预测。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3.2 支持向量机（SVM）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 支持向量机算法模型在1995年被提出之后，得到了迅速发展，并在解决小样本、非线性和高维的模式识别问题中，均取得非常不错的效果。支持向量机根据其使用的核函数可分为：线性、多项式、高斯、拉普拉斯、Sigmoid类型的SVM。本文就情感分析问题上主要使用的是线性支持向量机，故此下文将详细的介绍线性支持向量机以及其数学推导过程。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 支持向量机是一种有监督的学习算法。在二维平面上，散落着很多数据点，假设数据点仅有两类，那么我们可以找到一条直线对其进行分割，使不同类的数据点位于直线的两侧。同理在三维的空间中我们仍然可以找到一个面，将数据点分割开来，继而将维度上升至n维，那么也必定能够找到n-1的对象将n维中的数据分为不同的类别。这个n-1维的对象称为分隔超平面。在分割的过程中，离分隔超平面最近的点叫作支持向量。在实际应用中，人们通常希望找到最优的分隔超平面，所谓最优，就是指分隔超平面两侧的支持向量间的距离最大，当满足这个条件时，我们把它称为最大分类间隔超平面。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 通过数学建模可知，在二维的情况下，分隔超平面的线性方程为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （2.3）
+<br>
+  <br>
+<span style="margin-left:25px"></span> ——分隔超平面的法向量
+<br>
+  <br>
+<span style="margin-left:25px"></span> ——分隔超平面方程的截距量
+<br>
+  <br>
+<span style="margin-left:25px"></span> 那么支持向量到分隔超平面的距离为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.4)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 同时，如下图所示：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 对于支持向量来说，其满足的线性方程为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.5)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 因此异类支持向量之间的距离为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.6)
+<br>
+  <br>
+<span style="margin-left:25px"></span> ——分隔超平面法向量的绝对值
+<br>
+  <br>
+<span style="margin-left:25px"></span> 那么求解最大分类间隔的超平面即为求解两个异类支持向量之间的最大距离，也就是求解W的最小值。为了方便研究W的最值问题以及方便求导，将求解W的最小值转化成½|W2|的最小值，即MIN(½|W2|)。同时对于分隔超平面每侧的支持向量，均满足下面的关系式。
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.7)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 那么对于支持向量机的基本数学关系式为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.8)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在约束条件：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.9)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在后续的求解过程中，由于问题本身就是一个凸二次规划问题，故此可以使用拉格朗日对偶问题的求解思路进行解决。首先设置拉格朗日α因子，并规定α大于等于0。那么得到的拉格朗日函数为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.10)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 根据拉格朗日函数式，对W、α求偏导：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.11)
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.12)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 进而推导拉格朗日函数式为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.13)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 同时问题转换成：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.14)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 其应该满足的条件为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.15)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 则问题由原来的拉格朗日函数式问题转换成求解合适α，使关系式取得最大值，那么求解α也就是smo算法问题，smo算法的数学推导如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 计算误差：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.16)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 计算上下界：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.17)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 计算η
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.18)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 更新αj
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.19)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 修正αj
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.20)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 更新αi
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.21)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 更新b1和b2：
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.22)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 根据b1、b2更新
+<br>
+  <br>
+<span style="margin-left:25px"></span> (2.23)
+<br>
+  <br>
+<span style="margin-left:25px"></span> SMO算法的工作原理是：每次循环中选择两个alpha进行优化处理。一旦找到了一对合适的alpha，那么就增大其中一个同时减小另一个。这里所谓的”合适”就是指两个alpha必须符合以下两个条件，条件之一就是两个alpha必须要在间隔边界之外，而且第二个条件则是这两个alpha还没有进进行过区间化处理或者不在边界上。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3.3 卷积神经网络（CNN）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3.3.1 传统的神经网络的基本结构、优缺点
+<br>
+  <br>
+<span style="margin-left:25px"></span> 传统的神经网络是根据生物的神经网络系统的特点，模仿着生物通过神经网络对现实世界的判断，从而实现算法对于现实问题的交互反应。对于生物神经网络系统而言，神经元与神经元之间的联系依靠神经元分泌的化学物质，上一个神经元分泌的化学物质刺激下一个神经元，并最终激活该神经元，实现神经元之间的信息互通。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 传统神经网络的基本结构是：输入层，隐含层（通常包含多层），输出层，而每一层都是由若干的神经元构成的。输入层作为接收数据的基础，接收数据之后传递至下一层神经元。在传递的过程中，神经元之间通过激活函数传递信息即权重，从而激活下一层的神经元，并这样一直传递下去，最终在输出层得到结果，回归或者分类等等。但是对于传统的神经网络，由于每层的神经元都需要进行传递信息和运算，将导致运算规模较大、运算速度较慢，从而并不适合本文的中文情感分析流程。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 卷积神经网络（CNN）针对传统神经网络的缺点很好的做了弥补和优化，例如如果我们去识别一张“猫”图片，我们不需要分析每一个像素点之后，才能得出这是一只猫的结论，如果查看眼睛、耳朵等部位也可以得出同样的结论。那么这样无论速度、还是准确率都将大大的提升。卷积神经网络的正是通过卷积运算减少特征，从而实现通过局部特征进行分析，得出结论。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.3.3.2 卷积神经网络基本结构：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 卷积神经网络的基本构成为卷积层、池化层、dropout层，全连接层。下面将分别进行介绍：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 卷积层中的卷积核在数字信号处理领域被称为滤波器，主要的种类有高斯滤波器等。而卷积层的作用就是类似于特征选择器，通过卷积核与原特征矩阵进行卷积运算，从而提取原特征矩阵中的关键特征元素。这样也就解决了传统神经网络的参数、特征太多问题。同时卷积运算的公式如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （2.24）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 其中n为原矩阵维度，f为卷积核大小，p为填充大小，s为步长。在这里p即填充大小，填充的目的在于保证经过卷积运算之后得到的矩阵大小仍然和原输入矩阵大小相同。S作为步长，规定了卷积运算时横向、纵向移动的长度。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 池化层可以理解为在卷积层经过卷积运算的基础上，将运算后得到的数据输入到池化层，而池化层通过既定的运算规则，进一步的提取重要的特征，从而降低运算的复杂性，提高准确率。池化的具体方式有两种，一种是取最大值MaxPooling，另一种是取平均值Avgpooling。前者是根据步长，去相应矩阵中的最大值进行合并，后者是根据矩阵元素的平均值，作为新的代表元素进行合并。
+<br>
+  <br>
+<span style="margin-left:25px"></span> Dropout层是研究人员为了防止在训练模型、测试数据的时候出现“过拟合”现象而采用的技巧，通俗来讲就是通过设置概率阈值，每次训练的过程中按照一定的概率丢弃相应的神经网络，是训练的网络减少，通过实验验证，这种做法对于降低过拟合很有帮助。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 全连接层作为卷积神经网络的最后一层，也就是输出层，在这一层上，之前经过卷积、池化后的特征矩阵将在全连接层上做最后的运算，最终得到我们需要的结果。以上便是卷积神经网络的基本构成，在后文中，将会介绍在进行中文情感分析的过程中，如何搭建具体的卷积神经网络，以及使用神经网络进行情感分析。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 2.4 本章小结
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在本章中，第一部分首先讲述了python网络爬虫技术，以及本文爬取数据的具体逻辑，之后对于爬到的电影影评数据进行了预处理，去掉了其中的英文、字符、表情、标点，这样整个数据集中便只剩下了由纯中文构成的中文影评文本。那么为了文本向量化，本章又讲述了使用jieba中文分词工具对预处理过后的文本进行分词，从而得到分词后的评论文本。而对于分词后的评论文本，还讲述了如何使用去除停用词，也就是对于感情色彩并不重要的词或字。从而得到最终的数据集。第二部分本章具体的介绍了机器学习算法、深度学习算法。主要包括机器学习算法朴素贝叶斯、支持向量机、深度学习卷积神经网络。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第3章 朴素贝叶斯算法在中文文本情感分析中的应用
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.1 贝叶斯定理与朴素贝叶斯
+<br>
+  <br>
+<span style="margin-left:25px"></span> 根据统计学相关知识可知，贝叶斯定理是由英国数学家托马斯-贝叶斯提出，当时由于数据量过于庞大，而计算量过于繁重，贝叶斯定理在当时并没有引起人们的注意，如今，计算机的出现不但加快了数据的计算速度，同时也扩大了数据的运算规模，而贝叶斯定理也深入的应用到各个领域，在机器学习领域，朴素贝叶斯算法也成功的应用到文本分类、垃圾评论过滤、以及预测分析的问题上。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 机器学习中的朴素贝叶斯算法，是在贝叶斯定理的基础上，提出相关假设，并将贝叶斯公式成功进行了应用。在原贝叶斯定理的基础上，如果假设问题的各个特征相互独立且发生的概率互不影响，此时，贝叶斯定理也就精确为朴素贝叶斯。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.1.1 贝叶斯公式
+<br>
+  <br>
+<span style="margin-left:25px"></span> 根据统计数的相关知识，可知贝叶斯公式为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （3.1）
+<br>
+  <br>
+<span style="margin-left:25px"></span> P(A|B)、P(B|A)均表示条件概率，而对应的含义分别为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> P(A|B)：在事件B发生的条件下，事件A发生的概率
+<br>
+  <br>
+<span style="margin-left:25px"></span> P(B|A)：在事件A发生的条件下，事件B发生的概率
+<br>
+  <br>
+<span style="margin-left:25px"></span> 其中，P(A|B)称作后验概率，P(A)称为先验概率，P(B|A)/P(B)称为可能性函数，又称做影响因子。那么由以上含义，条件概率便有了新的阐释方式：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 条件概率 = 可能性函数（影响因子） * 先验概率
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.1.2 朴素贝叶斯在文本情感分析中的具体应用
+<br>
+  <br>
+<span style="margin-left:25px"></span> 而在具体的文本情感分析、垃圾邮件分类等的问题中，假设问题的各个特征之间互不影响、相互独立，那么此时贝叶斯公式便发生适当转化，也就是朴素贝叶斯公式。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在文本情感分析的过程中，将分词后的句子的每个词作为该句子的特征，并且这些特征出现的可能性均相互独立。那么此时问题便转化成：
+<br>
+  <br>
+<span style="margin-left:25px"></span> “在已知特征的情况下，求解对应情感类别的概率”，公式表达如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> P(类别|特征)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 那么根据贝叶斯公式可知：已经提到特征是不止一个的，那么对于一句中文文本如何使用朴素贝叶斯公式求解呢？
+<br>
+  <br>
+<span style="margin-left:25px"></span> 并且已经假设各个特征之间相互独立，且互不影响，那么此时由朴素贝叶斯公式可知：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （3.2）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 可见，在特征特别多的文本情感分类问题上，朴素贝叶斯仍然适用。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2 朴素贝叶斯中文文本情感分析处理流程
+<br>
+  <br>
+<span style="margin-left:25px"></span> 基于机器学习算法朴素贝叶斯的中文文本情感分析处理流程主要包括：中文文本预处理、停用词处理、自定义词典、中文分词、TFIDF特征提取、中文词性标注、词频统计、训练数据、验证数据。下面将详细介绍。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.1 中文文本预处理
+<br>
+  <br>
+<span style="margin-left:25px"></span> 由于数据集在爬取的过程中，难免出现夹杂冗余数据的情况，而冗余数据主要包括：标点、符号、表情、英文等。这些词的存在，不仅加大了算法处理数据的负担，同时也大大降低了文本情感分析的准确率，所以在进行数据训练之前必须过滤掉这些脏数据。本文使用的方法是利用python的正则模块re，匹配英文、标点符号、表情，并去除掉这些数据。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.2 停用词处理
+<br>
+  <br>
+<span style="margin-left:25px"></span> 停用词是指在信息检索中，为节省存储空间和提高搜索效率，在处理自然语言数据（或文本）之前或之后会自动过滤掉某些字或词，这些字或词即被称为Stop Words（停用词）。可见，停用词在文本的情感分析上面，并不具备很好的情感倾向，故此完全可以去除掉停用词，这样也就降低了这些词对于情感分析的影响，从而提高中文本情感分析的准确性。以下面的句子为例：
+<br>
+  <br>
+<span style="margin-left:25px"></span> “结局很出乎意料，韩式幽默和腾式幽默的碰撞，前半段很搞笑后半段很煽情。打败自己的只有自己，很燃看完竟然泪流满面，韩寒给我们青春的回忆”
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在这句中，停用词包括“的”、“和”可见这些词或字并没有对这句文本的情感正负性产生任何影响，因此还是应该去掉，从而降低算法训练数据的压力。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.3 中文分词
+<br>
+  <br>
+<span style="margin-left:25px"></span> 由于中文使用标点符号，分隔句子，这种特点便加大了词与词之间的联系，为了分析中文文本的情感，必须将句子分隔成不同的词语，这样每个词语作为该文本的特征，而整个句子也被分割成了多个词语，这样一个中文句子便被分割成了若干个词语。例如该句：
+<br>
+  <br>
+<span style="margin-left:25px"></span> “结局很出乎意料，韩式幽默和腾式幽默的碰撞，前半段很搞笑后半段很煽情。打败自己的只有自己，很燃看完竟然泪流满面，沈腾和韩寒给我们青春的回忆”
+<br>
+  <br>
+<span style="margin-left:25px"></span> 进过中文分词处理后：
+<br>
+  <br>
+<span style="margin-left:25px"></span> “结局 很 出乎意料  韩式 幽默 和 腾式 幽默 的 碰撞  前半段 很 搞笑 后半段 很 煽情 打败 自己 的 只有 自己 很燃 看 完 竟然 泪流满面 韩寒  沈  腾 给 我们 青春 的 回忆”
+<br>
+  <br>
+<span style="margin-left:25px"></span> 只有经过分词处理后，一个中文文本的句子才可以转换成向量矩阵进行运算，从而对中文的情感分析进行进一步处理。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.4 自定义词典
+<br>
+  <br>
+<span style="margin-left:25px"></span> 自定义词典的原因主要是：无论多么好的分词工具，也不可能将自己的数据集中的中文文本全部准确无误的分隔成词，比如从上文我们可知，“韩寒”作为具体的人称被分词工具成功的发现，但是“沈腾”却并没有被发现并提取出来，这样也就造成了分词的误差，而太多的分词误差便会导致整个文本情感分析的准确性，因此我们必须自己根据数据集的情况手动添加词语进入自定义词典，并在分词工具分词前加载进去。这样便能够使分词按照我们的意愿进行，也防止了一些词汇被误分隔，一些词汇没有被发现的问题的出现。具体例子如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 未定义词典：
+<br>
+  <br>
+<span style="margin-left:25px"></span> ”打败 自己 的 只有 自己 很燃 看 完 竟然 泪流满面 韩寒  沈  腾 给 我们 青春 的 回忆”
+<br>
+  <br>
+<span style="margin-left:25px"></span> 自定义词典后：
+<br>
+  <br>
+<span style="margin-left:25px"></span> “打败 自己 的 只有 自己 很燃 看 完 竟然 泪流满面 韩寒  沈腾 给 我们 青春 的 回忆”
+<br>
+  <br>
+<span style="margin-left:25px"></span> 可见，沈腾作为名词被识别出来了。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.5 TF-IDF特征提取
+<br>
+  <br>
+<span style="margin-left:25px"></span> 当中文文本被分词处理后，得到了若干词组成的词向量，为了更好的分析该文本的情感倾向，需要进一步提取文本的特征。如果把所有分词后得到的词汇都当做特征，那么在大文本数据量的背景下，特征维度过大，导致算法的运算时间过长，同时也不利于情感分析准确率的提高。而如果只考虑词频，按照词频的高低选取固定数目的词作为该句文本的特征，那么便会出现如下情况：
+<br>
+  <br>
+<span style="margin-left:25px"></span> “我今天非常不开心，因为我的书包丢了”这句话经过分词后，得到如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> “我 今天 非常 不 开心 ， 因为 我 的 书包 丢 了”，可知“我”这个字出现了两次，是整个句子出现频率最高的词，不过如果只选择我作为该句话的特征，也就是仅考虑词频高低的情况下，文本的情感分析将会受到大大影响。
+<br>
+  <br>
+<span style="margin-left:25px"></span> TF-IDF是Term Frequency -  Inverse Document Frequency的缩写，即“词频-逆文本频率”。它由两部分组成，TF和IDF。TF指的是词频，也就是一个词在当前文本中出现的次数，而IDF指的是一个词在所有文本中出现的次数，如果一个词在所有文本中出现的次数很高，那么它的IDF值将会很低，而如果在所有文本中出现的次数不多，那么其IDF值将会很高。而TF-IDF的主要思想也就是，如果一个词在当前文本中出现的次数很高，即TF很高，且其在所有文本中出现的次数很低，也就是IDF很高，那么我们认为这个词具备很好的分类能力，故此将其提取出来。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文使用机器学习工具包sklearn中的TFIDFVectorizer实现文本的向量化，并且根据每个词的TFIDF特征值，提取相关词作为当前语句的特征，从而实现降低词向量维度，同时提高准确率。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.6 中文词性标注
+<br>
+  <br>
+<span style="margin-left:25px"></span> 词性标注是指在分词的过程中，根据词性表将分好的词语标注词性，目前比较权威的汉语词性表是ICTCLAS汉语词性表，它主要将词语的词性归类为：
+<br>
+  <br>
+<span style="margin-left:25px"></span> * 实词：名词、动词、形容词、状态词、区别词、数词、量词、代词
+<br>
+  <br>
+<span style="margin-left:25px"></span> * 虚词：副词、介词、连词、助词、拟声词、叹词。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文在ICTCLAS汉语词性表的基础上，利用jieba分词工具，在分词的同时，也对词语的词性进行了标注，更好的区分了动词、形容词、副词等等。具体词性标注效果如下(仅列举部分)：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 表演：v 台词： n 没： v  刻意： v  营造: v  笑点: n  燃点 : n
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.7 词频统计
+<br>
+  <br>
+<span style="margin-left:25px"></span> 对于词频的统计，在TFIDF特征值处理的时候，已经计算过了，此处不再赘述。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.2.8 训练数据、验证数据
+<br>
+  <br>
+<span style="margin-left:25px"></span> 完成上述步骤之后，便可以利用机器学习朴素贝叶斯算法，训练数据，当模型训练完毕后，在测试集上测试，最终得到相关的指标。本文采用两种方式实现朴素贝叶斯训练数据。下文将详细介绍，与此同时本文还选择了准确率、召回率、以及F-score、学习曲线作为模型的评判标准。由混淆矩阵可知：
+<br>
+  <br>
+<span style="margin-left:25px"></span> True Positive(真正，TP)：将正类预测为正类数
+<br>
+  <br>
+<span style="margin-left:25px"></span> True Negative(真负，TN)：将负类预测为负类数
+<br>
+  <br>
+<span style="margin-left:25px"></span> False Positive(假正，FP)：将负类预测为正类数误报 (Type I error)
+<br>
+  <br>
+<span style="margin-left:25px"></span> False Negative(假负，FN)：将正类预测为负类数→漏报 (Type II error)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 准确率指得是经过模型训练、分析、预测得到的分类正确的信息数与总信息数的比值，准确率越高，该分类器的效果就越好。准确率计算公式如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （3.3）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 召回率指的是经过模型训练、分析、预测得到的正确的分类数量与总共的正确数量的比值。召回率计算公式如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （3.4）
+<br>
+  <br>
+<span style="margin-left:25px"></span> score是指当准确率、召回率发生冲突时，对二者进行综合的考虑得到的指标。F-score的具体计算公式如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （3.5）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 其中α为调和参数。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文先后采用了自实现朴素贝叶斯算法进行分类训练，预测分析和使用机器学习工具库sklearn朴素贝叶斯分类模块进行分类，具体的分类效果以及评判标准如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 使用python编程语言编写朴素贝叶斯算法，并在训练集上面训练模型，当模型训练完毕后，进行测试。本文以9893条豆瓣影评进行训练，2000条豆瓣影评进行测试，得到的最终结果如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 可以看到，训练完的模型在测试集上面的准确率达到了87%左右。不过自实现的算法在大数据量的情况下，算法运行的时间将会大大增加，并且最终的准确率也大大降低。这体现了自实现朴素贝叶斯算法的不完备性。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 使用sklearn中的朴素贝叶斯分类器模块，进行分类。sklearn是一个Python第三方提供的非常强力的机器学习库，它包含了从数据预处理到训练模型的各个方面。在实战使用scikit-learn中可以极大的节省我们编写代码的时间以及减少我们的代码量，使我们有更多的精力去分析数据分布，调整模型和修改超参。在上文的论述中，我们了解到朴素贝叶斯共有三种模型，分别是多项式模型，高斯模型，伯努利模型，而这三种模型都有着不同的应用领域。多项式模型，更多的用于特征是离散的情况；高斯模型更多的处理连续特征的情况；与多项式模型一样，伯努利模型适用于离散特征的情况，所不同的是，伯努利模型中每个特征的取值只能是1和0。而对于中文情感分析问题，本文分别使用了三种模型对其分析效果进行了对比。主要对比如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 准确率、召回率、F-Score对比：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 多项式模型：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 高斯模型：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 伯努利模型：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 通过对比可以看到，无论是准确率、召回率、还是F-Score指标，都是多项式模型更适合做情感分析。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 通过学习曲线，对比拟合程度
+<br>
+  <br>
+<span style="margin-left:25px"></span> 多项式模型：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 高斯模型：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 伯努利模型：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 通过上述三图分析可知：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 高斯模型在训练集逐渐增大的情况下，训练集的出错概率也在逐渐增大，而测试集准确率也并没有随着数据的增大有所改善。伯努利模型和多项式模型，测试集、训练集的学习曲线均有着相同的趋势。二者均随着数据量的增加而不断收敛至一个标准值，且由图可以判断二者均出现了欠拟合问题，不过就准确率、召回率的高低比较而言，多项式模型具有更好的实验效果。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 3.3 本章小结
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在本章中，具体介绍了朴素贝叶斯算法如何应用到中文文本的情感分析中来，同时在3.2小节中，详细的介绍了朴素贝叶斯情感分析的处理流程。主要包括文本预处理、特征提取、训练数据、测试数据等。并在最后分别展示了朴素贝叶斯的三种模型高斯模型、伯努利模型、多项式模式分别用于情感分析的效果对比，主要包括准确率、召回率、F-Score等。除此之外，还分别绘制了学习曲线从而查看不同的模型的拟合程度。同时本章也对比了不同数量的数据集对于实验效果的影响，可以看到在增大数据集之后明显实验效果会改善。最后本章介绍了sklearn工具包，以及使用其实现朴素贝叶斯算法等。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第4章 支持向量机算法在中文文本情感分析中的应用
+<br>
+  <br>
+<span style="margin-left:25px"></span> 机器学习算法支持向量机在中文文本情感分析中的主要流程为：文本预处理、中文分词、向量化、特征提取、svm训练数据、测试数据等。而文本预处理、中文分词、向量化、特征提取这些部分的内容均与朴素贝叶斯中文文本分类的步骤相同，在这里便不再重复赘述。本文使用机器学习工具包sklearn实现svm分类模型的训练，并在测试集上进行了测试，也取得不错的效果。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.1 支持向量机·核函数
+<br>
+  <br>
+<span style="margin-left:25px"></span> 对于支持向量机的基本定义、最大间隔、支持向量以及拉格朗日对偶问题的使用等已经在上文详细介绍过，在此不做过多赘述。而对于支持向量机而言，所使用的核函数不同，得到的分类效果也不尽相同。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在之前讨论的支持向量、以及分隔超平面的相关内容，我们首先是在假设数据点线性可分的基础上进行推导的。那么如果数据点并不是线性可分的呢，例如异或问题：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 对于这种问题我们不可能找到一条超平面或者直线将数据点分割成两个类别，那么为了解决这类问题，我们引入映射函数将原样本空间中数据点映射至更高维的特征空间中，使数据点在高维的特征空间中是可分的。例如下图，异或问题便得到了解决：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 而在上文中使用的映射函数被称为核函数，可想而知在使用svm支持向量机算法做文本的情感分析的时候，我们希望样本在相应的特征空间中线性可分，那么特征空间的好坏对支持向量机的性能至关重要，而核函数的选择也是隐性的选择了特征空间，故此适当的选择核函数对于文本的情感分析至关重要。SVM支持向量机的常用核函数有线性核，多项式核，高斯核，拉普拉斯核以及Sigmoid核。下面详细介绍这些核函数：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 线性核函数：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 线性核的表达式如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （4.1）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 线性核函数主要处理于线性可分的数据点样本，也就是说如果数据点样本是线性可分的，那么输入线性核函数后形成的特征空间与原样本空间是完全一致的。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 多项式核函数：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 多项式核的表达式如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> （4.2）
+<br>
+  <br>
+<span style="margin-left:25px"></span> 多项式核函数能够实现将原样本空间映射成高维的特征空间，从而实现原样本点不可分转换成在特征空间内可以分割的情况，对于多项式核函数来说，它的参数更多，也比线性核函数更加复杂，运算的规模更大，速度更慢。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 高斯核函数：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 高斯核函数的表达式如下:
+<br>
+  <br>
+<span style="margin-left:25px"></span> (4.3)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 高斯核函数也可以将原样本空间映射到高维的特征空间，不过与多项式核函数相比，高斯核函数的参数更少，并且实用性更强，无论大样本数据还是小样本数据都可以取得非常不错的效果。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.2 不同核函数的SVM文本情感分析对比
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本文共使用了三种核函数对svm中文情感分析进行了实验，并取得了不同的效果。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.2.1 线性核函数实验效果：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 注：以下实验均使用豆瓣影评为数据集，其中训练集5000条，测试集1200条
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在机器学习工具包sklearn中，设置参数,kernel = 'linear'，即为线性核函数。使用线性核函数时的情感分类效果如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 可以看到，分类的准确率达到了74.08%，召回率达到了71%左右。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.2.2 多项式核函数实验效果：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在同样的数据集下如果和函数采用多项式核函数的话，准确率下降到了0.48，召回率达到了100%，但这并不能说明分类的效果很好，因为召回率反应了该分类模型对正向情感分类的效果非常好，但是准确率不足一半又恰恰说明了该分类模型对负向也就是消极的情感并不具备很好的辨识能力。可见多项式核函数并不适合此次中文文本情感分类。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.2.3 高斯核函数实验效果：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 由上图所示，高斯模型在同样的数据集下的分类效果和多项式核函数模型相同，故此可以推断，在5000训练集，1200测试集的情况下，线性核函数的分类效果更加优越。当然，在后文的调参优化、增大数据集操作之后，高斯、多项式核函数也会展现出改善的效果。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 4.3 本章小结
+<br>
+  <br>
+<span style="margin-left:25px"></span> 本章主要介绍了支持向量机（SVM）基本结构，在4.1中本章主要介绍了支持向量机的核函数以及核函数的用途，同时讲述了svm的主要核函数，包括线性核函数、高斯核函数、多项式核函数等。在下一节中，本文使用sklearn实现不同核函数的支持向量机的中文文本的感情分析，最终得到不同的效果，可以从上文的图片得知，只有线性核达到了本次实验的基本要求。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 第5章 卷积神经网络算法在中文文本情感分析中的应用
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在第三,第四章的内容中,主要讲述的是基于机器学习的基本算法对中文文本的情感进行分析,主要的算法包括朴素贝叶斯,支持向量机。本章将使用非传统方法来对中文文本的进行分析，也就是使用卷积神经网络对现有数据集——豆瓣电影评论进行分析。下面将详细介绍具体流程。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.1 文本预处理
+<br>
+  <br>
+<span style="margin-left:25px"></span> 前文中无论是使用朴素贝叶斯、还是使用支持向量机算法，都需要对数据集进行文本预处理，而使用的深度学习中的卷积神经网络进行分析时，同样是需要进行文本预处理的，不过此处的文本预处理与前文并不一致，在本章中，将使用两种方式实现卷积神经网络，一种是基于字粒度，而另外一种是基于词粒度。当然实现的方法不同，对应的文本预处理也就不一致。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.1.1 基于字粒度的文本预处理
+<br>
+  <br>
+<span style="margin-left:25px"></span> 之所以是基于字粒度，原因是不对影评数据集进行分词处理，而是将训练集中所有评论的数据逐字进行统计，提取出不重复的所有字，作为字符表，用于后期生成每个影评数据的向量。具体的做法如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 读取MongoDB数据库中的影评数据，同时剔除重复数据，不能将重复的数据作为训练集，这样将导致数据测试的准确率下降。利用正则表达式、BeautifulSoup等工具剔除文本中掺杂的标点符号、英文数字。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 将处理好的文本数据按照相应比例分为训练集、测试集、验证集写入不同的文件，用于后期的训练验证和测试。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 遍历训练集数据，统计每个字出现的频率，使用Counter类过滤重复汉字，并按照频率高低进行排序，生成字典的形式，也就是key为汉字，value为频率。写入文件中，形成全部的字符表。为后期的训练时生成向量做准备。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 以上便是基于字粒度的文本预处理流程，最主要的目的就通过预处理得到全部的不重复字符表，以作为后期向量生成的标准和参考。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.1.2 基于词粒度的文本预处理
+<br>
+  <br>
+<span style="margin-left:25px"></span> 基于词粒度的文本预处理，便是不在以字符作为输入单位，而是将影评数据集使用jieba工具进行分词，然后统计全部的不重复词作为词汇表。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 读取MongoDB数据库中的影评数据，同时剔除重复数据，不能将重复的数据作为训练集，这样将导致数据测试的准确率下降。利用正则表达式、BeautifulSoup等工具剔除文本中掺杂的标点符号、英文数字。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 将处理好的文本数据按照相应比例分为训练集、测试集、验证集写入不同的文件，用于后期的训练验证和测试。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 遍历训练集数据，使用结巴工具分词，统计分词后的词语出现的频率，使用Counter类过滤重复词语，并按照频率高低进行排序，生成字典的形式，也就是key为词语，value为频率。写入文件中，形成全部的词汇表。为后期的训练时生成向量做准备。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 词粒度的做法更能很好的体现评论语句与词汇的联系性，分词后得到的词汇表的词汇量
+<br>
+  <br>
+<span style="margin-left:25px"></span> 要远远大于基于字符粒度的总量。也就是说在使用分词后的训练数据时，神经网络的维度要变得更大。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.2 中文文本情感分析时卷积神经网络的结构
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在第二章时，本文讲述了基本的卷积神经网络的构成，主要包括输入层、卷积层、池化层、全连接层、输出层等。那么在本章中，将会详细的介绍，进行中文文本情感的分析时，如何搭建合适的网络结构。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 词向量嵌入层
+<br>
+  <br>
+<span style="margin-left:25px"></span> 词向量嵌入层作为是本文自定义的网络的第一层，其作用便是将通过文本预处理得到的词汇表，将每句影评映射到相应维度的词向量。由于影评文本的长度不一，那么得到的词向量的形状便不一样，这样的话不利于之后的数据批处理，故此可以采用设置阈值，同时使用keras中的特殊标记^PAD^，自动的将文本的长度扩大到制定阈值，这样也就保证了每个文本的映射的词向量长度都是固定的，对数据的批处理阶段会更方便。主要代码如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> embedding = tf.get_variable('embedding', [self.config.vocab_size, self.config.embedding_dim]) 	embedding_inputs = tf.nn.embedding_lookup(embedding, self.input_x)
+<br>
+  <br>
+<span style="margin-left:25px"></span> 卷积层、池化层
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在上文中，我们已经提到过卷积层的作用相当于特征提取，而卷积层所做的运算主要是卷积运算。通过卷积运算，选取更能代表数据样本的特征。在本文中，设定卷积核数目为256个，同时指定卷积核大小为5。同时为了减少参数，防止过拟合现象的出现，池化层的设置也必不可少。具体设置代码如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> # CNN layer 卷积层	conv = tf.layers.conv1d(embedding_inputs,self.config.num_filters, self.config.kernel_size, name='conv')	# global max pooling layer 最大池化层	gmp = tf.reduce_max(conv, reduction_indices=[1], name='gmp')
+<br>
+  <br>
+<span style="margin-left:25px"></span> 全连接层、Dropout层
+<br>
+  <br>
+<span style="margin-left:25px"></span> 上文也提到了全连接层、Dropout层的具体作用，分别是最后的运算和丢弃部分神经元防止过拟合现象。本章中我们设定全连接层神经元的个数为128个，设定分类器，并在参数上赋值为积极、消极两种类别。同时设置dropout比例，最后链接relu激活函数。主要代码如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> # dense表示全连接层 在这里不指定激活函数，也就是使用默认的激活函数即为线性激活，后面接dropout以及relu激活	# 指定全连接层神经元128个	fc = tf.layers.dense(gmp, self.config.hidden_dim, name='fc1')	# print(self.keep_prob) 	fc = tf.contrib.layers.dropout(fc, self.keep_prob)	fc = tf.nn.relu(fc)	# 分类器	self.logits = tf.layers.dense(fc, self.config.num_classes, name='fc2')	self.y_pred_cls = tf.argmax(tf.nn.softmax(self.logits), 1) # 预测类别
+<br>
+  <br>
+<span style="margin-left:25px"></span> 定义损失函数、设置准确率函数
+<br>
+  <br>
+<span style="margin-left:25px"></span> with tf.name_scope("optimize"):	# 损失函数，交叉熵	#添加L2正则化	reg=tf.contrib.layers.apply_regularization(tf.contrib.layers.l2_regularizer(1e-4), tf.trainable_variables())	cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=self.logits, labels=self.input_y)	self.loss = tf.reduce_mean(cross_entropy)+reg	self.loss = tf.reduce_mean(cross_entropy)	# 优化器	self.optim = tf.train.AdamOptimizer(learning_rate=self.config.learning_rate).minimize(self.loss)	with tf.name_scope("accuracy"):	# 准确率	correct_pred = tf.equal(tf.argmax(self.input_y, 1), self.y_pred_cls)	self.acc = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+<br>
+  <br>
+<span style="margin-left:25px"></span> 损失函数是对模型所造成误差的度量，而度量值越小说明模型的误差越小，也体现模型对于当前分类问题的适应性。为了度量误差的大小，我们使用交叉熵损失函数来对模型的误差程度进行评估。定义了准确率函数，目的是在训练阶段、测试阶段跟踪模型的性能。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.3 卷积神经网络训练、验证、测试结果
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在上一节中，具体介绍了怎样搭建卷积神经网络，从而用于中文文本的情感辨析中。本节在已有网络的基础上，对训练集、验征集数据进行了训练和交叉验证，之后在测试集进行了测试，得到的具体分类指标如下：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 数据训练阶段
+<br>
+  <br>
+<span style="margin-left:25px"></span> 从图中可以得出结论，随着不断地迭代，训练集的损失越来越小，训练集的准确率越来越高，可见模型在训练集上的学习能力逐渐增强；但可以看到，验征集的准确率虽然也在一直提高，但并没有达到训练集的准确率，除此之外，验征集的损失也一直在0.45左右。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 测试阶段：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 可以看到，模型在测试集上的准确率为76.44%，并且损失率也达到了0.61，结合验征集的验证指标，可以得出结论：经过训练集训练的模型并不被具备很好的泛化能力，并且模型有可能出现了过拟合问题。
+<br>
+  <br>
+<span style="margin-left:25px"></span> Tensorboard 曲线：
+<br>
+  <br>
+<span style="margin-left:25px"></span> Accuracy曲线：
+<br>
+  <br>
+<span style="margin-left:25px"></span> Loss曲线：
+<br>
+  <br>
+<span style="margin-left:25px"></span> 虽然模型的训练准确率总体趋势为逐渐增大，损失率总体趋势为逐渐减少，不过准确率的波动很大，说明模型的稳定性和泛华性并不是很好。1
+<br>
+  <br>
+<span style="margin-left:25px"></span> 5.4 本章小结
+<br>
+  <br>
+<span style="margin-left:25px"></span> 在本章中，主要介绍了如何根据数据集搭建卷积神经网络的网络模型结构，以及设置那些超参数会对实验效果产生影响。同时通过使用tensorflow成功搭建词向量嵌入层、卷积层、池化层、全连接层，并对4万余条数据进行了训练、验证、测试，得到了相应的实验结果。同时根据tensorboard训练准确率、损失率图表，可以得出当前神经网络模型还存在待优化的可能，也出现了过拟合的问题有待解决。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 致谢
+<br>
+  <br>
+<span style="margin-left:25px"></span> 致    谢
+<br>
+  <br>
+<span style="margin-left:25px"></span> 行文至此，预示着我的大学生涯也即将结束。回首四年的大学时光，往事依然历历在目，这四年里有过大一的无知、大二的贪玩、也有大三大四的努力与沉淀。可无论怎样，这四年都是属于自己不平凡的四年，都是若干年后回味起来仍然津津有味的四年。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 若要用一个词进行总结，那必定是“感谢”一词。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 感谢这四年陪伴自己的好友。忘不了与你们一同走过的那些时光，因为它是我人生最宝贵的经历。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 感谢于我传道受业解惑的老师们，您们的谆谆教诲我将铭记于心，学生后悔未能珍惜课堂时光，深知为时已晚，却也无力弥补，只能在此祝福老师们身体健康，桃李天下。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 感谢我的父母，是你们给了我充足的空间去成长，给了我足够的权利去选择。作为您们的孩子，四年时光，伴您左右少之又少，无以回报，但父亲您对我的要求，母亲您对我的教诲，漫漫人生，孩子绝不会忘。
+<br>
+  <br>
+<span style="margin-left:25px"></span> 感谢19岁到23岁的自己，是你的年少无知、懵懵懂懂让我明白了原来吃亏是福，是你的敢于尝试，不愿低人一等的倔强给了我如今的自信，感谢你！
+<br>
+  <br>
+<span style="margin-left:25px"></span> 挥别过去，放眼未来，更加艰巨的任务还需要自己去完成，希望自己仍然保有19岁、20岁的满腔热血，21岁、22岁的毅力与坚持，学好本事，放低身姿，以梦为马，不负韶华，成为更好的自己。
+<br>
+</div>
+
+<div style="margin-bottom:100px"></div>
+</body>
+</html>
